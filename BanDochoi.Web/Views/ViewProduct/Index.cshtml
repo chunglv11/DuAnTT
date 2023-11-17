@@ -1,0 +1,345 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using BanDochoi.Web.Areas.Identity.Data;
+@model BanDochoi.Web.Models.Product
+@inject SignInManager<AppUser> SignInManager
+@{
+    List<ProductImage> pi = Model.ProductImages.ToList();
+    double numberOfVote = Model.Reviews.Count();
+    double totalVote = Model.Reviews.Sum(r => r.Vote);
+    double tb = (totalVote / numberOfVote);
+    double rs = Math.Round(tb, 1);
+    List<Product> rp = ViewBag.relatedProduct as List<Product>;
+}
+<div class="container single_product_container" style="margin-top: 20rem">
+    <div class="row">
+        <input type="hidden" value="@Model.Id" id="productid" />
+        <div class="col-lg-7">
+            <div class="single_product_pics">
+                <div class="row">
+                    <div class="col-lg-3 thumbnails_col order-lg-1 order-2">
+                        <div class="single_product_thumbnails">
+                            <ul>
+                                @{
+
+                                    var active = "";
+                                }
+                                @if (pi.Count <= 0)
+                                {
+                                    var srcImg = $"/contents/noimg.jpg";
+                                    active = $"/contents/noimg.jpg";
+                                }
+                                else
+                                {
+
+                                    @for (int i = 0; i < pi.Count; i++)
+                                    {
+                                        var srcImg = $"/contents/Products/{pi[i].FileName}";
+                                        if (i == 0)
+                                        {
+                                            continue;
+                                        }
+                                        <li><img src="@srcImg" alt="" data-image="@srcImg"></li>
+                                    }
+                                    active = $"/contents/Products/{pi[0].FileName}";
+                                }
+                                <li><img src="@active" alt="" data-image="@active"></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="col-lg-9 image_col order-lg-2 order-1">
+                        <div class="single_product_image">
+                            <div class="single_product_image_background" style="background-image:url(@active)"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="product_details">
+                <div class="product_details_title">
+                    <h2 style="font-size: 3.6rem">@Model.ProductName</h2>
+                    <p style="font-size: 1.8rem">@Model.Summary</p>
+                </div>
+                <div class="free_delivery d-flex flex-row align-items-center justify-content-center">
+                    <span class="ti-truck"></span><span>Miễn phí vận chuyển</span>
+                </div>
+                <div class="product_price">@Model.Price.ToString("N0")<sup>đ</sup></div>
+                <ul class="star_rating">
+                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                    <li><i class="fa fa-star" aria-hidden="true"></i></li>
+                    <li><i class="fa fa-star-o" aria-hidden="true"></i></li>
+                </ul>
+                <div class="product_status">
+                    @if (Model.Quantity > 0)
+                    {
+                        <span>Còn hàng: @Model.Quantity sản phẩm</span>
+                    }
+                    else
+                    {
+                        <span>Hết hàng</span>
+                    }
+                </div>
+                <div class="quantity_product d-flex flex-column flex-sm-row align-items-sm-center">
+                    <div class="red_button add_to_cart_button" style="margin: 0"><a asp-action="AddToCart" asp-controller="ViewProduct" asp-route-productid="@Model.Id">Thêm vào Giỏ</a></div>
+                    <div class="product_favorite d-flex flex-column align-items-center justify-content-center"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-lg-7 info-watch" style="font-size: 16px">
+            <h1 style="text-align: center; padding: 3.2rem; font-size: 2.8rem">Thông tin chi tiết sản phẩm</h1>
+            @Html.Raw(Model.Description)
+            @*<a class="btn-xem-them active">Xem thêm</a>*@
+            <h1 style="text-align: center; padding: 3.2rem; font-size: 2.8rem">Đánh giá sản phẩm</h1>
+            <div style="display: flex; justify-content:center">
+                <span id="btnvote">Viết đánh giá</span>
+            </div>
+            @if (rs > 0)
+            {
+                <span style="font-size: 30px;  color: #f5c000;">@rs <i class="fa-solid fa-star"></i></span>
+            }
+            else
+            {
+                 <span style="font-size: 18px;  color: #000;">Chưa có đánh giá</span>
+            }
+            <div id="section-comment">
+            </div>
+            <div class="sotrang" style="margin-top: 16px; display: flex; justify-content:center">
+                <button id="xemthem" class="common-btn"></button>
+            </div>
+            <input id="sotrang" type="hidden" />
+            <input id="numofvote" type="hidden" value="@numberOfVote" />
+            <div class="overlay-vote">
+                <div class="form-vote">
+                    <h1>Viết đánh giá cho sản phẩm</h1>
+                    <div class="vote">
+                        <input type="hidden" id="vote">
+                        <span><i class="fa-solid fa-star"></i></span></i>
+                        <span><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                        <span><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                        <span><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                        <span><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i><i class="fa-solid fa-star"></i></span>
+                    </div>
+                    <textarea name="Comment" id="comment" class="form-control" placeholder="Nhập đánh giá về sản phẩm" rows="5"></textarea>
+                    <div class="info-comment">
+                        <input name="FullName" id="fullname" placeholder="Nhập họ tên" />
+                        <input name="Phone" id="phone" placeholder="Nhập số điện thoại" />
+                    </div>
+                    <div>
+                        <input name="ProductId" id="productid" type="hidden" class="form-control" value="@Model.Id" />
+                    </div>
+                    <div class="send-comment">
+                        <input type="button" class="common-btn" id="cancel-comment" value="Hủy" />
+                        <input type="button" class="common-btn" id="send-comment" value="Gửi nhận xét" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-5" style="font-size: 16px">
+            <h1 style="text-align: center; padding: 3.2rem; font-size: 2.8rem">Sản phẩm có thể bạn quan tâm</h1>
+            @*@await Component.InvokeAsync("RelatedProductsBox")*@
+            @foreach (var item in rp)
+            {
+                <a class="related-product-w" asp-action="Index" asp-controller="ViewProduct" asp-route-id="@item.Id">
+                    <div class="related-product">
+                        @{
+                            var srcImg = "";
+                            List<ProductImage> i = item.ProductImages.ToList();
+                        }
+                        @if (pi.Count() > 0)
+                        {
+                            srcImg = $"/contents/Products/{i[0].FileName}";
+                        }
+                        else
+                        {
+                            srcImg = "/contents/noimg.jpg";
+                        }
+                        <div class="related-product-img">
+                            <img src="@srcImg" height="140" width="140" alt="">
+                        </div>
+                        <div class="related-product-info">
+                            <p>@item.Category.Name</p>
+                            <h3>@item.ProductName</h3>
+                            <h4>@item.Price.ToString("N0")<sup>đ</sup></h4>
+                        </div>
+                    </div>
+                </a>
+            }
+        </div>
+    </div>
+</div>
+<script src="~/assets/js/productdetail.js"></script>
+<script>
+    //let btn_xem = document.querySelector(".btn-xem-them");
+    //let info_watch = document.querySelector(".info-watch");
+    //btn_xem.onclick = () => {
+    //	btn_xem.classList.remove("active");
+    //	btn_xem.classList.add("no-active");
+    //	info_watch.classList.add("active");
+    //}
+    var btnvote = document.getElementById("btnvote");
+    var cancelcomment = document.getElementById("cancel-comment");
+    var overlay = document.querySelector(".overlay-vote")
+    btnvote.onclick = () => {
+        overlay.classList.add("active")
+    }
+
+    cancelcomment.onclick = () => {
+        overlay.classList.remove("active")
+    }
+    var vote = document.getElementById("vote");
+    var star = document.querySelectorAll(".vote>span");
+    star[0].onclick = () => {
+        vote.value = 1
+        star[0].classList.add("active");
+        star[1].classList.remove("active");
+        star[2].classList.remove("active")
+        star[3].classList.remove("active")
+        star[4].classList.remove("active")
+    }
+    star[1].onclick = () => {
+        vote.value = 2
+        star[0].classList.remove("active");
+        star[1].classList.add("active");
+        star[2].classList.remove("active")
+        star[3].classList.remove("active")
+        star[4].classList.remove("active")
+    }
+    star[2].onclick = () => {
+        vote.value = 3
+        star[0].classList.remove("active");
+        star[1].classList.remove("active");
+        star[2].classList.add("active")
+        star[3].classList.remove("active")
+        star[4].classList.remove("active")
+    }
+    star[3].onclick = () => {
+        vote.value = 4
+        star[0].classList.remove("active");
+        star[1].classList.remove("active");
+        star[2].classList.remove("active")
+        star[3].classList.add("active")
+        star[4].classList.remove("active")
+    }
+    star[4].onclick = () => {
+        vote.value = 5
+        star[0].classList.remove("active");
+        star[1].classList.remove("active");
+        star[2].classList.remove("active")
+        star[3].classList.remove("active")
+        star[4].classList.add("active")
+    };
+    /////////////////////////////////////////
+    $("#send-comment").click(function () {
+        var id = $("#productid").val();
+        var emp = new Object();
+        emp.Vote = $("#vote").val();
+        emp.Comment = $("#comment").val();
+        emp.PhoneNumber = $("#phone").val();
+        emp.FullName = $("#fullname").val();
+        emp.ProductId = $("#productid").val();
+        overlay.classList.remove("active");
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("SendComment")",
+            data: emp,
+            success: function (response) {
+                if (response.result == true) {
+                    loadComment();
+                    document.getElementById('comment').value = '';
+                    document.getElementById('fullname').value = '';
+                    document.getElementById('phone').value = '';
+                } else {
+                    console.log("Không bình luận được");
+                }
+            }
+        })
+    })
+    var numberOfVote = document.getElementById("numofvote");
+    numberOfVote.value -= 3;
+    var sotrang = document.getElementById("sotrang");
+    if (numberOfVote.value <= 0) {
+        document.getElementById("xemthem").style.display = 'none';
+    }
+    sotrang.value = 1;
+    $("#xemthem").html("Xem Thêm " + numberOfVote.value + " Đánh Giá");
+    $("#xemthem").click(function () {
+        numberOfVote.value -= 3;
+        ++sotrang.value;
+        var st = sotrang.value;
+        var box = $("#section-comment");
+        var ProductID = $("#productid").val();
+        box.empty();
+        console.log(ProductID)
+        var formData = new FormData();
+        formData.append("id", ProductID);
+        formData.append("sotrang", st);
+        var urlListPhoto = "@Url.Action("ListComment")";
+        $.ajax({
+            data: formData,
+            cache: false,
+            url: urlListPhoto,
+            type: "POST",
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.photos.forEach(function (item) {
+                    var e = $(
+                        '<div class="component-comment">'
+                        + '<p>' + item.fullname + '</p>'
+                        + '<p>' + item.vote + '<i class="fa-solid fa-star"> </i></p>'
+                        + '<p>' + item.comment + '</p>'
+                        + '<p style="font-size: 14px; color: #b3b3b3">' + item.createddate + '</p>'
+                        + '</div>'
+                    );
+                    box.append(e);
+                });
+            }
+        });
+        $("#xemthem").html("Xem Thêm " + numberOfVote.value + " Đánh Giá");
+        if (numberOfVote.value <= 0) {
+            document.getElementById("xemthem").style.display = 'none';
+        }
+    })
+
+    function loadComment() {
+        var box = $("#section-comment");
+        var ProductID = $("#productid").val();
+        box.empty();
+        console.log(ProductID)
+        var formData = new FormData();
+        formData.append("id", ProductID);
+        var urlListPhoto = "@Url.Action("ListComment")";
+        $.ajax({
+            data: formData,
+            cache: false,
+            url: urlListPhoto,
+            type: "POST",
+            contentType: false,
+            processData: false,
+            success: function (data) {
+                data.photos.forEach(function (item) {
+                    var e = $(
+                        '<div class="component-comment">'
+                        + '<p>' + item.fullname + '</p>'
+                        + '<p>' + item.vote + '<i class="fa-solid fa-star"> </i></p>'
+                        + '<p>' + item.comment + '</p>'
+                        + '<p style="font-size: 14px; color: #b3b3b3">' + item.createddate + '</p>'
+                        + '</div>'
+                    );
+                    box.append(e);
+                });
+            }
+        });
+        if(numberOfVote.value + 3 > 3){
+            document.getElementById("xemthem").style.display = 'block';
+        }
+    }
+    $(document).ready(function () {
+        loadComment();
+    });
+
+</script>

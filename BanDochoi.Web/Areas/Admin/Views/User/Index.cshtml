@@ -1,0 +1,64 @@
+﻿@using BanDochoi.Web.Areas.Admin.Models.User;
+@model UserListModel
+@*@using App.Menu
+@inject AdminSidebarService _AdminSidebarService*@
+@{
+    ViewData["Title"] = "Danh sách các thành viên";
+    Layout = "/Views/Shared/_LayoutAdmin.cshtml";
+}
+<partial name="_StatusMessage"></partial>
+
+
+<h1 class="h3 mb-2 text-gray-800">Quản lý người dùng</h1>
+
+<!-- DataTales Example -->
+<div class="card shadow mb-4">
+    <div class="card-header py-3">
+        <h6 class="m-0 font-weight-bold text-primary">Danh sách người dùng</h6>
+    </div>
+    <div class="card-body">
+        <p>Tổng số thành viên: @Model.totalUsers</p>
+        <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Tên user</th>
+                        <th>Vai trò (role)</th>
+                        <th>Tác vụ</th>
+                    </tr>
+                </thead>
+                <tfoot>
+                    <tr>
+                        <th>Tên user</th>
+                        <th>Vai trò (role)</th>
+                        <th>Tác vụ</th>
+                    </tr>
+                </tfoot>
+                <tbody>
+                    @foreach (var user in Model.users)
+                    {
+                        <tr>
+                            <td>@user.UserName</td>
+                            <td>
+                                @if (string.IsNullOrEmpty(user.RoleNames))
+                                {
+                                    <a class="text-dark" asp-action="AddRole" asp-route-id="@user.Id">+ Thêm roles</a>
+                                }
+                                else
+                                {
+                                    <a asp-action="AddRole" asp-route-id="@user.Id">@user.RoleNames</a>
+                                }
+                            </td>
+                            <td>
+                                <a class="btn btn-primary" asp-action="SetPassword" asp-route-id="@user.Id">Đặt mật khẩu</a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script src="~/js/common.js"></script>
+}

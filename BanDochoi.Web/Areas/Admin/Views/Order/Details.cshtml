@@ -1,0 +1,103 @@
+﻿@model  BanDochoi.Web.Models.Order
+
+@{
+    //List<District> huyen = ViewData["quanhuyen"] as List<District>;
+    List<City> thanhpho = ViewData["thanhpho"] as List<City>;
+    List<Product> sanpham = ViewData["sanpham"] as List<Product>;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h3>Chi tiết đơn hàng</h3>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-2">
+            Quận huyện
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.District.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Tỉnh thành
+        </dt>
+        <dd class="col-sm-10">
+            @thanhpho.Where(c => c.Id == Model.District.CityId).FirstOrDefault().CityName
+        </dd>
+        <dt class="col-sm-2">
+            Ngày đặt
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt class="col-sm-2">
+            Sản phâm mua
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach (var i in Model.OrderDetails)
+                {
+                    var sp = sanpham.Where(s => s.Id == i.ProductId).FirstOrDefault();
+                    <li>Tên sản phẩm: @sp.ProductName | Số lượng: @i.Quantity </li>
+                }
+            </ul>
+        </dd>
+        <dt class="col-sm-2">
+            Phương thức thanh toán
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PaymentMethod)
+        </dd>
+        <dt class="col-sm-2">
+            Thành tiền
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Total)<sup>đ</sup>
+        </dd>
+        <dt class="col-sm-2">
+            Trạng thái
+        </dt>
+        <dd class="col-sm-10">
+            @if (Model.Status == BanDochoi.Web.Models.Enums.Status.Confirmed)
+            {
+                <p>Đã xác nhận</p>
+            }
+            else if (Model.Status == BanDochoi.Web.Models.Enums.Status.Success)
+            {
+                <p>Thành công</p>
+            }
+            else if (Model.Status == BanDochoi.Web.Models.Enums.Status.Canceled)
+            {
+                    <p>Đã hủy</p>
+            }
+            else if (Model.Status == BanDochoi.Web.Models.Enums.Status.Shipping)
+            {
+                <p>Đang giao hàng</p>
+            }
+            
+        </dd>
+        <dt class="col-sm-2">
+            Ngày giao
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.DeliveryDate)
+        </dd>
+    </dl>
+</div>
+<div>
+    <a asp-action="Index" class="btn btn-primary">Quay lại danh sách đơn hàng đã xác nhận</a>
+    </br>
+    </br>
+</div>

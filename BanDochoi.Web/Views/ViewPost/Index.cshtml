@@ -1,0 +1,53 @@
+﻿@model X.PagedList.IPagedList<BanDochoi.Web.Models.Post>
+@using X.PagedList.Mvc.Core
+@using X.PagedList.Web.Common;
+
+<div class="section-content container">
+    <div class="heading-section">
+        <h1 href="" class="heading-content">Bài viết</h1>
+    </div>
+    <div style="display: flex; flex-wrap: wrap">
+        <div class="list-post row col-md-9 col-sm-12">
+            <div class="row">
+                @foreach (var item in Model)
+                {
+                    var srcImg = "/contents/baivet.jpg";
+                    <a class="post-common-a" asp-action="ViewPostDetail" asp-route-id="@item.Id">
+                        <div class="post-common col-sm-12 col-lg-12">
+                            <div class="new-post-img">
+                                <img src="@srcImg" style="border-radius: 8px" alt="">
+                            </div>
+                            <div class="post-item">
+
+                                <div class="post-info">
+                                    <h1 class="post-title">@item.Title</h1>
+                                    <p class="post-cdate">Ngày đăng: @String.Format("{0:dd/MM/yyyy}",@item.CreatedDate)</p>
+                                    <p class="post-sdescr">@item.ShortDescription</p>
+                                </div>
+
+                            </div>
+                        </div>
+                    </a>
+                }
+            </div>
+            <div>
+                @Html.PagedListPager(Model, page => Url.Action("Index", new {page = page}), new PagedListRenderOptions()
+                {
+                ActiveLiElementClass = "active",
+                PageClasses = new[]{ "page-link"},
+                LiElementClasses=new[] { "page-item"},
+                UlElementClasses = new[] { "pagination","justify-content-center", "mt-3", "size" },
+                LinkToNextPageFormat = "Sau",
+                LinkToPreviousPageFormat = "Trước",
+                MaximumPageNumbersToDisplay = 5,
+                DisplayLinkToPreviousPage = PagedListDisplayMode.Always,
+                DisplayLinkToNextPage = PagedListDisplayMode.Always
+                })
+            </div>
+        </div>
+        <div class="col-md-3">
+            <p style="width: 90%; border-bottom: 1px solid #000; font-size: 24px">Các bài viết mới nhất</p>
+            @await Component.InvokeAsync("NewPostBox")
+        </div>
+    </div>
+</div>

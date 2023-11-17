@@ -1,0 +1,103 @@
+﻿@model IEnumerable<BanDochoi.Web.Models.Product>
+@{
+    ViewData["Title"] = "Home Page";
+
+}
+<!-- Phần slider -->
+<partial name="_SlidePartial" />
+<div class="section-content container">
+    <div class="list-brand row">
+        <div class="brand-item col-lg-6 col-md-6">
+            <div class="overlay-category"></div>
+            <img src="./assets//img/anh1.jpg" alt="">
+            <div class="brand-info">
+                <h1 class="brand-name">Đồ chơi điều khiển</h1>
+                <div class="see-more-btn">
+                    <a asp-action="GetProductByCategory" asp-controller="ViewProduct" asp-route-categoryId="1">XEM THÊM</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand-item col-lg-6 col-md-6">
+            <div class="overlay-category"></div>
+            <img src="./assets/img/anh2.jpg" alt="">
+            <div class="brand-info">
+                <h1 class="brand-name">Đồ chơi thông minh</h1>
+                <div class="see-more-btn">
+                    <a asp-action="GetProductByCategory" asp-controller="ViewProduct" asp-route-categoryId="2">XEM THÊM</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    @*<div class="list-brand row">
+        <div class="brand-item col-lg-6 col-md-6">
+            <div class="overlay-category"></div>
+            <img src="./assets/img/donghoco.jpg" alt="">
+            <div class="brand-info">
+                <h1 class="brand-name">Đồng Hồ Cơ</h1>
+                <div class="see-more-btn">
+                    <a href="">XEM THÊM</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="brand-item col-lg-6 col-md-6">
+            <div class="overlay-category"></div>
+            <img src="./assets/img/donghopin.jpg" alt="">
+            <div class="brand-info">
+                <h1 class="brand-name">Đồng Hồ Pin</h1>
+                <div class="see-more-btn">
+                    <a href="">XEM THÊM</a>
+                </div>
+            </div>
+        </div>
+    </div>*@
+    <section class="main container">
+        <div class="section-content">
+            <div class="heading-section">
+                <a href="#" class="heading-content">SẢN PHẨM MỚI</a>
+            </div>
+            @await Component.InvokeAsync("NewProductBox")
+            <div class="heading-section">
+                <a href="#" class="heading-content">DANH SÁCH SẢN PHẨM</a>
+            </div>
+            <div class="list-product">
+                <div class="row">
+                    @foreach (var item in Model)
+                    {
+                        var srcImg = "/contents/noimg.jpg";
+                        if (item.ProductImages.Any())
+                        {
+                            srcImg = $"/contents/Products/{item.ProductImages.FirstOrDefault().FileName}";
+                        }
+                        <div class="col-md-6 col-lg-3">
+                            <div class="product-item new-arrival-item">
+                                <a href="">
+                                    <div class="new-arrival-img">
+                                        <img src="@srcImg" alt="">
+                                    </div>
+                                    <div class="new-arrival-info">
+                                        <h1 class="new-arrival-brand">@item.Category.Name</h1>
+                                        <h1 class="new-arrival-name">@item.ProductName</h1>
+                                        <p class="new-arrival-price">@item.Price.ToString("N0")<sup>đ</sup></p>
+                                        <div class="details-product animate__animated animate__fadeInUp">
+                                            <a asp-controller="ViewProduct" asp-action="Index" asp-route-id="@item.Id">CHI TIẾT</a>
+                                        </div>
+                                    </div>
+                                </a>
+                            </div>
+                        </div>
+                    }
+                </div>
+                <div class="all-new-arrival">
+                    <div class="all-btn">
+                        <a asp-action="ViewAllProduct" asp-controller="ViewProduct">
+                            XEM TẤT CẢ SẢN PHẨM
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

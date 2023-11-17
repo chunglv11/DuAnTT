@@ -1,0 +1,22 @@
+﻿@model ICollection<BanDochoi.Web.Models.Category>
+
+<ul class="submenu">
+    @foreach (var c in Model)
+    {
+        if (c.ParentCategoryId == null)
+        {
+            <li>
+                <a asp-controller="ViewProduct" asp-action="GetProductByCategory" asp-route-categoryId="@c.Id">@c.Name</a>
+                <ul class="submenu-children">
+                    @foreach (var cc in Model)
+                    {
+                        if (cc.ParentCategoryId == c.Id)
+                        {
+                            <li><a asp-controller="ViewProduct" asp-action="GetProductByCategory" asp-route-categoryId="@cc.Id">@cc.Name</a></li>
+                        }
+                    }
+                </ul>
+            </li>
+        }
+    }
+</ul>

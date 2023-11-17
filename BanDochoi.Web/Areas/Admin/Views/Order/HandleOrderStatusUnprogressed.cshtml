@@ -1,0 +1,93 @@
+﻿@model  BanDochoi.Web.Models.Order
+
+@{
+    //List<District> huyen = ViewData["quanhuyen"] as List<District>;
+    List<City> thanhpho = ViewData["thanhpho"] as List<City>;
+    List<Product> sanpham = ViewData["sanpham"] as List<Product>;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+
+<h3>Xử lý đơn hàng</h3>
+
+<div>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.FullName)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.FullName)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Address)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Address)
+        </dd>
+        <dt class="col-sm-2">
+            Quận huyện
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.District.Name)
+        </dd>
+        <dt class="col-sm-2">
+            Tỉnh thành
+        </dt>
+        <dd class="col-sm-10">
+            @thanhpho.Where(c => c.Id == Model.District.CityId).FirstOrDefault().CityName
+        </dd>
+        <dt class="col-sm-2">
+            Ngày đặt
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.OrderDate)
+        </dd>
+        <dt class="col-sm-2">
+            Sản phâm mua
+        </dt>
+        <dd class="col-sm-10">
+            <ul>
+                @foreach (var i in Model.OrderDetails)
+                {
+                    var sp = sanpham.Where(s => s.Id == i.ProductId).FirstOrDefault();
+                    <li>Tên sản phẩm: @sp.ProductName | Số lượng: @i.Quantity </li>
+                }
+            </ul>
+        </dd>
+        <dt class="col-sm-2">
+            Phương thức thanh toán
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.PaymentMethod)
+        </dd>
+        <dt class="col-sm-2">
+            Thành tiền
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Total)<sup>đ</sup>
+        </dd>
+    </dl>
+    <div>
+        <div>
+            <form asp-action="HandleOrderStatusUnprogressed">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="col-sm-5" style="padding: 0">
+                    <label asp-for="DeliveryDate" class="control-label" style="font-weight: bold"></label>
+                    <input asp-for="DeliveryDate" class="form-control" required />
+                    <span asp-validation-for="DeliveryDate" class="text-danger"></span>
+                </div>
+                <br />
+                <div>
+                    <input type="submit" value="Xử lý" class="btn btn-primary" />
+                </div>
+                </br>
+            </form>
+        </div>
+    </div>
+</div>
+<div>
+    <a asp-action="OrderStatusUnprogressed" class="btn btn-primary">Quay lại danh sách đơn hàng chưa xử lý</a>
+    </br>
+    </br>
+</div>

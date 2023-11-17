@@ -1,0 +1,69 @@
+﻿@model BanDochoi.Web.Models.Contact
+
+@{
+    ViewData["Title"] = "Gửi liên hệ";
+}
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h1>@ViewData["Title"]</h1>
+            <h4 style="padding: 16px 0">Hãy đóng góp ý kiến với chúng tôi</h4>
+            <div class="box-maps">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3724.782212026684!2d105.83266201531362!3d21.001365494088173!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3135ac7b8a209229%3A0xa2dacdd99b648b73!2zMyBOZy4gMTIwIFRyxrDhu51uZyBDaGluaCwgUGjGsMahbmcgxJDDrG5oLCDEkOG7kW5nIMSQYSwgSMOgIE7hu5lpLCBWaeG7h3QgTmFt!5e0!3m2!1svi!2s!4v1657523498844!5m2!1svi!2s" width="100%" height="488" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+        </div>
+        <div class="col-md-6" style="font-size: 16px">
+            <div class="some-lh">
+                <h1>Watch Store</h1>
+                <p>Email: <strong>watchstore.storeshop@gmail.com</strong></p>
+                <p>Điện thoại: <strong>0393220048</strong></p>
+            </div>
+            <form asp-action="SendContact">
+                <h1 style="padding: 16px 0">Gửi lời nhắn cho chúng tôi</h1>
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="infouser" style="background: #fff; padding: 10px; border-radius: 8px">
+                    <div class="areainfo">
+                        <div class="input left reqinput">
+                            <input asp-for="FullName" class="form-control" />
+                            <label asp-for="FullName" class="label">Họ và Tên</label>
+                            <span asp-validation-for="FullName" class="text-danger"></span>
+                            <small></small>
+                        </div>
+                        <div class="input right reqinput">
+                            <input asp-for="Phone" class="form-control" />
+                            <label asp-for="Phone" class="label">Số điện thoại</label>
+                            <span asp-validation-for="Phone" class="text-danger"></span>
+                            <small></small>
+                        </div>
+                        <div class="input email reqinput">
+                            <input asp-for="Email" class="form-control" />
+                            <label asp-for="Email" class="label">Email</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                            <small></small>
+                        </div>
+                        <div class="form-group">
+                            <textarea rows="6" asp-for="Message" style="font-size: 16px" class="form-control" placeholder="Lời nhắn"></textarea>
+                            <span asp-validation-for="Message" class="text-danger"></span>
+                        </div>
+                        <div class="clear"></div>
+                        <div class="check-out-btn">
+                            <input type="submit" value="Gửi liên hệ" />
+                        </div>
+                    </div>
+                </div>
+                
+            </form>
+        </div>
+    </div>
+</div>
+
+@*
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>*@
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

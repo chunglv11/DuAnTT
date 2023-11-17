@@ -1,0 +1,24 @@
+﻿@model BanDochoi.Web.Models.Summernote
+
+@if (Model.LoadLib)
+{
+    @*<link href="~/lib/summernote/summernote-lite.min.css" rel="stylesheet" />
+    <script src="~/lib/summernote/summernote-lite.min.js"></script>*@
+    <link href="~/lib/summernote/summernote-bs4.min.css" rel="stylesheet" />
+    <script src="~/lib/summernote/summernote-bs4.min.js"></script>
+}
+
+
+<script>
+    $(document).ready(function () {
+        $('@Model.IDEditor').summernote({
+            height: @Model.height,
+            fontSizes: ['12', '14', '16', '18', '24', '36', '48'],
+            table: [
+                ['add', ['addRowDown', 'addRowUp', 'addColLeft', 'addColRight']],
+                ['delete', ['deleteRow', 'deleteCol', 'deleteTable']],
+            ],
+            toolbar: @Html.Raw(Model.toolbar)
+            });
+    });
+</script>

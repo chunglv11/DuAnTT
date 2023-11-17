@@ -1,0 +1,25 @@
+﻿@model List<BanDochoi.Web.Models.CartItem>
+@{
+    decimal total = 0;
+    int stt = 1;
+}
+<div class="cart-list-product">
+    @foreach (var cartitem in Model)
+    {
+        var thanhtien = cartitem.Quantity * cartitem.Product.Price;
+        total += thanhtien;
+        var srcImage = $"/contents/Products/{cartitem.Image}";
+        <div class="cart-product-item">
+            <img src="@srcImage" alt="">
+            <div class="product-info-inco">
+                <div>
+                    <h2 class="product-name">@cartitem.Product.ProductName</h2>
+                </div>
+                <div class="product-info-pq">
+                    <span class="product-price" style="color: red">@cartitem.Product.Price.ToString("N0")<sup>đ</sup></span>
+                    <span class="product-price">SL: @cartitem.Quantity</span>
+                </div>
+            </div>
+        </div>
+    }
+</div>

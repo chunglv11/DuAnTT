@@ -1,0 +1,196 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Swiper -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.css" />
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" integrity="sha512-KfkfwYDsLkIlwQp6LFnl8zNdLGxu9YAA1QvwINks4PhcElQSvqcyVLLD9aMhXd13uQjoXtEKNosOWaZqXgel0g==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="~/assets/css/style.css" asp-append-version="true" />
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+    
+    <!--jquery ui-->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.13.2/themes/base/jquery-ui.css">
+    <title>Đồ chơi trẻ em</title>
+</head>
+<body onload="slider()">
+    <header id="header">
+        <div class="top-header container" role="navigation">
+            <!-- Hotline -->
+            <div class="hotline">
+                <p>HOTLINE ĐẶT HÀNG: 098722222</p>
+            </div>
+            <!-- Menu btn khi màn hình nhỏ -->
+            <div class="menu-btn">
+                <div>
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                </div>
+            </div>
+            <!-- Logo -->
+            <div class="logo">
+                <p class="mb-0">Tiệm đồ chơi</p>
+            </div>
+            <!-- Nút trên thanh header -->
+            <div class="icon">
+                <div class="search-btn">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </div>
+                <div class="cart-btn">
+                    @*<i class="fa-solid fa-cart-arrow-down"></i>
+                    <div class="quantity">
+                    <span>0</span>
+                    </div>*@
+                    <partial name="_CartPartial" />
+                </div>
+                <div class="user">
+                    @*<i class="fa-solid fa-user"></i>*@
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </div>
+        <!-- Điều hướng -->
+        <div class="nav-links">
+            <li><a asp-action="Index" asp-controller="Home">TRANG CHỦ</a></li>
+            <li><a asp-action="ViewIntroduce" asp-controller="ViewPost">GIỚI THIỆU</a></li>
+            <li>
+                <a href="#" style="margin-right: 4px">MENU</a>
+                <i class="fa-sharp fa-solid fa-chevron-down"></i>
+                @*@await Component.InvokeAsync("CategoryBoxNam")*@
+            </li>
+            <li><a asp-controller="ViewPost" asp-action="Index">BÀI VIẾT</a></li>
+            <li><a asp-area="Contact" asp-controller="Contacts" asp-action="SendContact">LIÊN HỆ</a></li>
+        </div>
+        <!--SUBMENu-->
+        @await Component.InvokeAsync("CategoryBox")
+        <!-- Form nhập tìm kiếm -->
+        <div class="search-form">
+            <form asp-action="Search" asp-controller="ViewProduct">
+                <input id="txtSearch" name="textSearch" type="text" placeholder="Tìm kiếm ...">
+                <span>
+                    <input type="submit" value="" hidden/>
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                </span>
+            </form>
+        </div>
+        <!-- Giỏ hàng -->
+        <div class="cart-form">
+            @await Component.InvokeAsync("CartBox")
+        </div>
+    </header>
+    <div style="margin-top: 20rem"></div>
+
+    <section class="main" style="min-height: 50vh">
+        @RenderBody();
+    </section>
+    <footer id="footer">
+        <div class="container">
+            <div class="top-footer row">
+                <div class="footer-content col-md-4">
+                    <div>
+                        <a href="" class="footer-logo">
+                            <p>Tiệm đồ chơi</p>
+                        </a>
+                        <p class="icon-footer phone-number">
+                            <i class="fa-solid fa-phone"></i> <a href="">0393220048</a>
+                        </p>
+
+                        <p class="icon-footer mail">
+                            <i class="fa-solid fa-envelope"></i> <a href="">bandochoi.storeshop@gmail.com</a>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer-content col-md-4">
+                    <div>
+                        <h1 class="heading-footer">
+                            LIÊN HỆ
+                        </h1>
+                        <p class="icon-footer">
+                            <i class="fa-solid fa-location-dot"></i> 3 Ng. 120 Đ. Trường Chinh, Phương Đình, Đống Đa, Hà Nội
+                        </p>
+
+                        <p class="icon-footer">
+                            <i class="fa-solid fa-truck"></i> Ship COD toàn quốc
+                        </p>
+
+                        <p class="icon-footer">
+                            <i class="fa-solid fa-gift"></i> FREESHIP đơn hàng từ 500.000đ
+                        </p>
+                    </div>
+                </div>
+
+                <div class="footer-content col-md-4">
+                    <div>
+                        <h1 class="heading-footer">
+                            CHÍNH SÁCH
+                        </h1>
+                        <p class="policy">
+                            <a href="">CHÍNH SÁCH THÀNH VIÊN</a>
+                        </p>
+
+                        <p class="policy">
+                            <a href="">CHÍNH SÁCH ĐỔI TRẢ</a>
+                        </p>
+
+                        <p class="policy">
+                            <a href="">CHÍNH SÁCH VẬN CHUYỂN</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom-footer">
+            <p><i class="fa-solid fa-copyright"></i> Bản quyền thuộc về STORE</p>
+        </div>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/swiper@8/swiper-bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.js"></script>
+    <script src="https://code.jquery.com/ui/1.13.2/jquery-ui.js"></script>
+    <script src="~/assets/js/main.js" asp-append-version="true"></script>
+    <script src="~/assets/js/searchproduct.js" asp-append-version="true"></script>
+    <script>
+        $(function () {
+            $("#txtSearch").autocomplete({
+                minLength: 0,
+                source: function(request, response) {
+                    $.ajax({
+                        url: "@Url.Action("ListName", "ViewProduct")",
+                        dataType: "json",
+                        data: {
+                            q: request.term
+                        },
+                        success: function (data) {
+                            response(data.data);
+                        }
+                    });
+                },
+                focus: function (event, ui) {
+                    $("#txtSearch").val(ui.item.label);
+                    return false;
+                },
+                select: function (event, ui) {
+                    $("#txtSearch").val(ui.item.label);
+
+                    return false;
+                }
+            })
+                .autocomplete("instance")._renderItem = function (ul, item) {
+                    return $('<li style="font-size: 16px">')
+                        .append("<div>" + item.label + "</div>")
+                        .appendTo(ul);
+                };
+        });
+    </script>
+    <script src="https://widget.flowxo.com/embed.js" data-fxo-widget="eyJ0aGVtZSI6IiMwMGIyY2MiLCJ3ZWIiOnsiYm90SWQiOiI2NDRkNmY2YTM1OWQ5YjAwMmFmMTExZjEiLCJ0aGVtZSI6IiMwMGIyY2MifX0=" async defer></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

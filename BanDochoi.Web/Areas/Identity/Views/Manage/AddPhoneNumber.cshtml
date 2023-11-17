@@ -1,0 +1,33 @@
+﻿@using BanDochoi.Web.Areas.Identity.Models.Manage;
+@model AddPhoneNumberViewModel
+@{
+    ViewData["Title"] = "Thêm số điện thoại";
+}
+
+<div class="container">
+    <h1 style="font-size: 36px">@ViewData["Title"]</h1>
+    <form asp-controller="Manage" asp-action="AddPhoneNumber" method="post" class="form-horizontal" role="form">
+        <h4 style="font-size: 24px">Thêm số điện thoại.</h4>
+        <hr />
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label style="font-size: 16px" asp-for="PhoneNumber" class="col-md-2 control-label"></label>
+            <div class="col-md-6">
+                <input style="font-size: 16px" asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <button type="submit" style="font-size: 16px" class="common-btn">Gửi mã</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

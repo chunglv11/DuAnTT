@@ -1,0 +1,30 @@
+﻿@model ICollection<BanDochoi.Web.Models.Product>
+
+
+@foreach (var item in Model)
+{
+    <a class="related-product-w" asp-action="Index" asp-controller="ViewProduct" asp-route-id="@item.Id">
+        <div class="related-product">
+            @{
+                var srcImg = "";
+                List<ProductImage> pi = item.ProductImages.ToList();
+            }
+            @if (pi.Count() > 0)
+            {
+                srcImg = $"/contents/Products/{pi[0].FileName}";
+            }
+            else
+            {
+                srcImg = "/contents/noimg.jpg";
+            }
+            <div class="related-product-img">
+                <img src="@srcImg" height="140" width="140" alt="">
+            </div>
+            <div class="related-product-info">
+                <p>@item.Category.Name</p>
+                <h3>@item.ProductName</h3>
+                <h4>@item.Price.ToString("N0")<sup>đ</sup></h4>
+            </div>
+        </div>
+    </a>
+}

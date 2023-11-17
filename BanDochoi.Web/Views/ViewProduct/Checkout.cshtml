@@ -1,0 +1,146 @@
+﻿@using Microsoft.AspNetCore.Identity;
+@using BanDochoi.Web.Areas.Identity.Data;
+@model BanDochoi.Web.Models.Order
+@inject UserManager<AppUser> UserManager
+@{
+    ViewData["Title"] = "Thanh toán";
+    List<District> huyen = ViewBag.huyen as List<District>;
+    List<City> thanhpho = ViewBag.thanhpho as List<City>;
+}
+
+<div class="wrap_cart">
+    <div class="check-out-heading">
+        <a asp-action="Index" asp-controller="Home">Mua thêm sản phẩm khác</a>
+        <p>Giỏ hàng của bạn</p>
+    </div>
+    <div class="list-product-incart">
+        @await Component.InvokeAsync("CartInCheckOut")
+    </div>
+    @{
+        AppUser email = null;
+        if (UserManager.GetUserName(User) != null)
+        {
+            email = UserManager.Users.Where(p => p.UserName == UserManager.GetUserName(User)).FirstOrDefault();
+        }
+    }
+    <form asp-action="Checkout" style="font-size: 100%">
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="infouser ">
+            <div class="areainfo">
+                <div class="input left reqinput">
+                    <input asp-for="FullName" class="form-control"/>
+                    <label asp-for="FullName" class="label">Họ và Tên</label>
+                    <span asp-validation-for="FullName" class="text-danger"></span>
+                    <small></small>
+                </div>
+                <div class="input right reqinput">
+                    <input asp-for="PhoneNumber" class="form-control" />
+                    <label asp-for="PhoneNumber" class="label">Số điện thoại</label>
+                    <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                    <small></small>
+                </div>
+                <div class="input email reqinput">
+                    @if(email != null)
+                    {
+                        <input asp-for="Email" value="@email.Email" class="form-control" />
+                    }else{
+                        <input asp-for="Email" class="form-control"/>
+                    }
+                    <label asp-for="Email" class="label"></label>
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                    <small></small>
+                </div>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="area_other">
+            <div class="textnote"><b>Để được phục vụ nhanh hơn,</b> hãy chọn thêm địa chỉ giao hàng:</div>
+            <div class="address ">
+            </div>
+            <div class="area_address show ">
+                <div class="address">
+                    <div class="city">
+                        <select style="font-size: 16px;" id="cboTinh" class="form-control">
+                            <option value="-1"> -- Chọn 1 thành phố --</option>';
+                            @foreach (var c in thanhpho)
+                            {
+                                <option value="@c.Id">@c.CityName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="district">
+                        <select style="width: 100%; font-size: 16px; border-radius: 8px;" class="form-control" asp-for="DistrictId">
+                            <option value="-1"> -- Chọn 1 quận huyện --</option>';
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="input reqinput">
+                <input asp-for="Address" class="form-control" />
+                <label asp-for="Address" class="label"></label>
+                <span asp-validation-for="Address" class="text-danger"></span>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+            <div style="height: 10px"></div>
+            <div class="form-group">
+                <input asp-for="Note" style="font-size: 16px" class="form-control" placeholder="Ghi chú (nếu cần)" />
+                <span asp-validation-for="Note" class="text-danger"></span>
+                <div class="clear"></div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div style="height: 1px; width: 100%; background-color: #000; margin-top: 10px"></div>
+        <div class="ptttt">
+            <h3>Phương thức thanh toán</h3>
+            <div class="item_hx_pt">
+                <span class="text_ptt">
+                    <label class="lable_check_tt">
+                        <input value="COD" checked="" asp-for="PaymentMethod" type="radio">
+                        <span class="tt_check_text">Thanh toán tiền mặt khi nhận hàng (COD)</span>
+                    </label>
+                </span>
+            </div>
+
+            <div class="item_hx_pt">
+                <span class="text_ptt">
+                    <label class="lable_check_tt">
+                        <input value="VNPay" asp-for="PaymentMethod" type="radio">
+                        <span class="tt_check_text">Thanh toán trực tuyến (VNPay)</span>
+                    </label>
+                </span>
+            </div>
+        </div>
+        <div class="check-out-btn">
+            <input type="submit" value="Hoàn tất đơn hàng" />
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+
+<script>
+    $(document).ready(function () {
+        $('#cboTinh').on('change', function () {
+            var id = $('#cboTinh option:selected').val();
+            var url = "@Url.Action("loadHuyen")"
+            $.ajax({
+                type: 'GET',
+                data: { tinhid: id },
+                url: url,
+                success: function (result) {
+                    var s = '';
+                    for (var i = 0; i < result.length; i++) {
+                        s += '<option value="' + result[i].id + '">' + result[i].name + '</option>';
+                    }
+                    $('#DistrictId').html(s);
+                }
+            })
+        })
+    })
+</script>

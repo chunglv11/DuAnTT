@@ -1,0 +1,125 @@
+﻿@model BanDochoi.Web.Areas.Admin.Controllers.ProductsController.UploadOneFile
+
+@{
+    Product product = ViewData["product"] as Product;
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<style>
+    .image-detail {
+        position: relative;
+    }
+
+        .image-detail span {
+            position: absolute;
+            top: 44%;
+            left: 33%;
+            display: none;
+        }
+
+        .image-detail:hover span {
+            display: block;
+        }
+
+        .image-detail:hover img {
+            opacity: 0.5;
+        }
+</style>
+
+<h3>Cập nhật hình ảnh cho: @product.ProductName</h3>
+<hr>
+<p>Chọn file ảnh</p>
+<input class="collapse"
+       type="file"
+       id="selectfileupload"
+       onchange="AutoUploadPhoto()" />
+
+<span class="btn btn-primary" onclick="ClickButtoUpload()">Uploads</span>
+<hr>
+<div id="box-photo-upload" class="d-flex flex-wrap photo-upload" data-id="@product.Id">
+</div>
+
+<a asp-action="Index" class="btn btn-primary">Quay lại danh sách sản phẩm</a>
+    </br>
+    </br>
+@section Scripts {
+    <script>
+        function AutoUploadPhoto() {
+            var formData = new FormData();
+            var id = $("#box-photo-upload").data("id");
+            formData.append("id", id);
+            var sofile = document.getElementById("selectfileupload").files.length;
+            if (sofile == 0) return;
+            var fileData = document.getElementById("selectfileupload").files[0];
+            formData.append("FileUpload", fileData)
+            var urlUpload = "@Url.Action("UploadPhotoApi")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlUpload,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    LoadPhotos();
+                }
+            });
+
+        }
+        function ClickButtoUpload() {
+            $("#selectfileupload").click();
+        }
+        function setClickDeletePhoto() {
+            $("#box-photo-upload .image-detail span").click(function () {
+                if (confirm("Có chắc chắn xóa ảnh?") != true) return;
+                var spanButton = $(this);
+                var id = spanButton.data("id");
+                var formData = new FormData();
+                formData.append("id", id);
+                var urlDeletePhoto = "@Url.Action("DeletePhoto")";
+                $.ajax({
+                    data: formData,
+                    cache: false,
+                    url: urlDeletePhoto,
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        LoadPhotos();
+
+                    }
+                });
+
+            });
+        }
+        function LoadPhotos() {
+            var box = $("#box-photo-upload");
+            var ProductID = box.data("id");
+            box.empty();
+            var formData = new FormData();
+            formData.append("id", ProductID);
+            var urlListPhoto = "@Url.Action("ListPhotos")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlListPhoto,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    data.photos.forEach(function (item) {
+                        var e = $(
+                            '<div class="image-detail w-25 p-1">'
+                            + '<img class="w-100" src="' + item.path + '" />'
+                            + '<span class="btn btn-danger" data-id="' + item.id + '">Delete</span></div>');
+                        box.append(e);
+                    });
+                    setClickDeletePhoto();
+                }
+            });
+
+        }
+        $(document).ready(function () {
+            LoadPhotos();
+        });
+    </script>
+}

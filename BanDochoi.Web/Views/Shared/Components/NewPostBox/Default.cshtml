@@ -1,0 +1,16 @@
+﻿@model ICollection<BanDochoi.Web.Models.Post>
+
+@foreach (var item in Model)
+{
+    <a class="post-common-a" asp-action="ViewPostDetail" asp-route-id="@item.Id">
+        <div class="post-common col-sm-12 col-lg-12">
+            <div class="post-item" style="padding: 0">
+                <div class="post-info">
+                    <h1 class="post-title" style="font-size: 20px">@item.Title</h1>
+                    <p class="post-cdate">Ngày đăng: @String.Format("{0:dd/MM/yyyy}",@item.CreatedDate)</p>
+                    <p class="post-sdescr">@item.ShortDescription</p>
+                </div>
+            </div>
+        </div>
+    </a>
+}

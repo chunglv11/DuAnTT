@@ -1,0 +1,118 @@
+﻿@model List<BanDochoi.Web.Models.CartItem>
+@{
+    Layout = "_Layout";
+}
+<div class="container">
+    <h2 style="font-size: 3.6rem; margin-top: 20rem;">#GIỎ HÀNG</h2>
+    <style>
+        .checkout {
+            width: 15.6rem;
+            padding: 1rem 2rem;
+            font-size: 1.8rem;
+            color: var(--White);
+            background-color: var(--Black);
+            border: none;
+            text-decoration: none;
+            text-align: center;
+        }
+
+            .checkout:hover {
+                background-color: var(--PrimaryColor);
+                color: var(--White);
+            }
+    </style>
+    @if (Model.Count > 0)
+    {
+        decimal total = 0;
+        int stt = 1;
+
+        <table class="table cart" style="font-size: 1.6rem">
+            <tr>
+                <th>#</th>
+                <th>Sản phẩm</th>
+                <th>Hình ảnh</th>
+                <th>Giá</th>
+                <th>Số lượng</th>
+                <th>Thành tiền</th>
+                <th></th>
+            </tr>
+            @foreach (var cartitem in Model)
+            {
+                var thanhtien = cartitem.Quantity * cartitem.Product.Price;
+                total += thanhtien;
+                var srcImage = $"/contents/Products/{cartitem.Image}";
+                <tr>
+                    <td>@(stt++)</td>
+                    <td>@cartitem.Product.ProductName</td>
+                    <td><img src="@srcImage" width="120px" height="120px" alt=""></td>
+                    <td>@(cartitem.Product.Price.ToString("n0"))<sup>đ</sup></td>
+                    <td><input asp-for="@cartitem.Quantity" min="1" class="@($"quantity1-{cartitem.Product.Id}")" /></td>
+                    <td>@(thanhtien.ToString("n0"))<sup>đ</sup></td>
+                    <td>
+                        <button class="btn btn-success updatecartitem1" style="font-size: 1.6rem" data-productid="@cartitem.Product.Id">
+                            Cập nhật
+                        </button>
+                        <a style="font-size: 1.6rem" asp-route="removecart" asp-route-productid="@cartitem.Product.Id" class="btn btn-danger">Xóa</a>
+                    </td>
+                </tr>
+            }
+            <tr>
+                <td colspan="4" class="text-right">Tổng tiền</td>
+                <td>@(total.ToString("n0"))<sup>đ</sup></td>
+                <td></td>
+            </tr>
+        </table>
+        <div>
+            <a asp-controller="ViewProduct" asp-action="Checkout" class="checkout">THANH TOÁN</a>
+        </div>
+        <div class="check-out-heading">
+            <a asp-action="Index" asp-controller="Home">Xem thêm các sản phẩm</a>
+        </div>
+        @section Scripts {
+        <script>
+            $(document).ready(function () {
+                $(".updatecartitem1").click(function (event) {
+                    event.preventDefault();
+                    var productid = $(this).attr("data-productid");
+                    var quantity = $(".quantity1-" + productid).val();
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.RouteUrl("updatecart")",
+                        data: {
+                            productid: productid,
+                            quantity: quantity
+                        },
+                        success: function (result) {
+                            window.location.href = "@Url.RouteUrl("cart")";
+                        }
+                    });
+                });
+                $(".updatecartitem").click(function (event) {
+                    event.preventDefault();
+                    var productid = $(this).attr("data-productid");
+                    var quantity = $(".quantity-" + productid).val();
+                    $.ajax({
+                        type: "POST",
+                        url: "@Url.RouteUrl("updatecart")",
+                        data: {
+                            productid: productid,
+                            quantity: quantity
+                        },
+                        success: function (result) {
+                            window.location.href = "@Url.RouteUrl("cart")";
+                        }
+                    });
+                });
+            });
+        </script>
+    }
+
+    }
+    else
+    {
+        <p style="font-size: 1.6rem" class="alert alert-danger">Giỏ hàng trống</p>
+        <div class="check-out-heading">
+            <a asp-action="Index" asp-controller="Home">Xem thêm các sản phẩm</a>
+        </div>
+    }
+</div>

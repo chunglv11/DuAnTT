@@ -1,0 +1,49 @@
+﻿@model List<BanDochoi.Web.Models.CartItem>
+@{
+    decimal total = 0;
+    int stt = 1;
+}
+@if (Model.Count > 0)
+{
+    <div class="cart-list-product">
+        @foreach (var cartitem in Model)
+        {
+            var thanhtien = cartitem.Quantity * cartitem.Product.Price;
+            total += thanhtien;
+            var srcImage = $"/contents/Products/{cartitem.Image}";
+            <div class="cart-product-item">
+                <img src="@srcImage" alt="">
+                <div class="product-info">
+                    <div>
+                        <h2 class="product-name">@cartitem.Product.ProductName</h2>
+                        <span class="product-price" style="font-size: 1.6rem">@cartitem.Product.Price.ToString("N0")<sup>đ</sup></span>
+                    </div>
+                    <div class="quantity-btn">
+                        <input asp-for="@cartitem.Quantity" min="1" class="@($"quantity-{cartitem.Product.Id}")" />
+                        <button class="btn btn-success updatecartitem" style="font-size: 1.8rem;margin-top: -0.5rem" data-productid="@cartitem.Product.Id">
+                            Cập nhật
+                        </button>
+                    </div>
+                </div>
+                <div class="close-btn">
+                    <a asp-route="removecart" asp-route-productid="@cartitem.Product.Id" class="btn btn-danger"><i class="fa-solid fa-xmark"></i></a>
+                </div>
+            </div>
+        }
+    </div>
+    <div class="payment-section">
+        <div class="payment-total">
+            <p>Tổng cộng:</p>
+            <span>@total.ToString("N0")<sup>đ</sup></span>
+        </div>
+        <div class="payment-btn">
+            <a asp-controller="ViewProduct" asp-action="Checkout" class="cart-section">THANH TOÁN</a>
+            <a asp-action="Cart" asp-controller="ViewProduct" class="cart-section">GIỎ HÀNG</a>
+        </div>
+    </div>
+}
+else
+{
+    <p style="font-size: 1.6rem" class="alert alert-danger">Giỏ hàng trống</p>
+}
+

@@ -1,0 +1,17 @@
+﻿@model  BanDochoi.Web.Models.Order
+
+@{
+    ViewData["Title"] = "Delete";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<h3>Xóa đơn hàng</h3>
+
+<h4>Bạn có chắc chắn muốn xóa đơn hàng @Model.Id này không?</h4>
+<div>
+    <hr />
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Xóa" class="btn btn-danger" /> |
+        <a asp-action="Index" class="btn btn-primary">Quay lại danh sách đơn hàng</a>
+    </form>
+</div>

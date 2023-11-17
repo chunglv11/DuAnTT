@@ -1,0 +1,36 @@
+﻿@{
+    var mgs = TempData["StatusMessage"] as string;
+}
+<style>
+    #toast {
+        margin: 0;
+        padding: 0;
+        position: absolute;
+        right: 20px;
+        z-index: 1000;
+    }
+    #msg {
+        margin: 0;
+        padding: 10px;
+    }
+</style>
+
+
+@if (!String.IsNullOrEmpty(mgs))
+{
+        var statusMessageClass = mgs.StartsWith("Error") ? "danger" : "success";
+        <div id="toast">
+            <div id="msg" class="alert alert-@statusMessageClass alert-dismissible" @*role="alert"*@>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @mgs
+            </div>
+        </div>
+}
+
+<script>
+    var toast = document.getElementById("toast");
+    var msg = document.getElementById("msg")
+    setTimeout(function(){
+        toast.removeChild(msg);
+    }, 3000)
+</script>

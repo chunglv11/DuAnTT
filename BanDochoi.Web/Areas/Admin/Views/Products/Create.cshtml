@@ -1,0 +1,152 @@
+﻿@model  BanDochoi.Web.Models.Product
+
+@{
+    ViewData["Title"] = "Create";
+    Layout = "~/Views/Shared/_LayoutAdmin.cshtml";
+}
+<partial name="_StatusMessage"></partial>
+
+<h3>Thêm sản phẩm</h3>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="ProductName" class="control-label"></label>
+                <input asp-for="ProductName" class="form-control" />
+                <span asp-validation-for="ProductName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Summary" class="control-label"></label>
+                <input asp-for="Summary" class="form-control" />
+                <span asp-validation-for="Summary" class="text-danger"></span>
+            </div>
+
+
+
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <textarea asp-for="Description" class="form-control"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label>Danh mục</label>
+                <select asp-for="CategoryId" class ="form-control" asp-items="ViewBag.CategoryId"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Thêm mới" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@{
+    var summernote = new BanDochoi.Web.Models.Summernote("#Description");
+}
+<partial name="_SummerNote" model="summernote" />
+
+<div>
+    <a asp-action="Index" class="btn btn-primary">Quay lại danh sách sản phẩm</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+        function AutoUploadPhoto() {
+            var formData = new FormData();
+            var id = $("#box-photo-upload").data("id");
+            formData.append("id", id);
+            var sofile = document.getElementById("selectfileupload").files.length;
+            if (sofile == 0) return;
+            var fileData = document.getElementById("selectfileupload").files[0];
+            formData.append("FileUpload", fileData)
+            var urlUpload = "@Url.Action("UploadPhotoApi")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlUpload,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    // ... xu ly du lieu lay duoc
+                    LoadPhotos();
+                }
+            });
+
+        }
+        function ClickButtoUpload() {
+            $("#selectfileupload").click();
+        }
+        function setClickDeletePhoto() {
+            $("#box-photo-upload .photodetail span").click(function () {
+                if (confirm("Có chắc chắn xóa ảnh?") != true) return;
+                var spanButton = $(this);
+                var id = spanButton.data("id");
+                var formData = new FormData();
+                formData.append("id", id);
+                var urlDeletePhoto = "@Url.Action("DeletePhoto")";
+                $.ajax({
+                    data: formData,
+                    cache: false,
+                    url: urlDeletePhoto,
+                    type: "POST",
+                    contentType: false,
+                    processData: false,
+                    success: function (data) {
+                        // ... xu ly du lieu lay duoc
+                        LoadPhotos();
+
+                    }
+                });
+
+            });
+        }
+        function LoadPhotos() {
+            var box = $("#box-photo-upload");
+            var ProductID = box.data("id");
+            box.empty();
+            var formData = new FormData();
+            formData.append("id", ProductID);
+            var urlListPhoto = "@Url.Action("ListPhotos")";
+            $.ajax({
+                data: formData,
+                cache: false,
+                url: urlListPhoto,
+                type: "POST",
+                contentType: false,
+                processData: false,
+                success: function (data) {
+                    // ... xu ly du lieu lay duoc
+                    data.photos.forEach(function (item) {
+                        // console.log(item.id);
+                        // console.log(item.path);
+                        var e = $(
+                            '<div class="photodetail w-25 p-1">'
+                            + '<img class="w-100" src="' + item.path + '" />'
+                            + '<span class="btn btn-danger" data-id="' + item.id + '">Delete</span></div>');
+                        box.append(e);
+                    });
+                    setClickDeletePhoto();
+                }
+            });
+
+            // console.log(ProductID);
+        }
+        $(document).ready(function () {
+            LoadPhotos();
+        });
+    </script>
+}

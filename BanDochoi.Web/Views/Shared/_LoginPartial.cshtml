@@ -1,0 +1,94 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using BanDochoi.Web.Areas.Identity.Data
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+@using BanDochoi.Web.Infrastructures
+@inject IUnitOfWork _unitOfWork
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <div>
+        <div class="dropdown no-arrow">
+            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <span class="mr-2 d-none d-lg-inline text-gray-600 small">
+                    <i class="far fa-user"></i>
+                    @{
+                        var name = _unitOfWork.WatchStoreDbContext.Users.Where(u => u.Id == @UserManager.GetUserId(User)).FirstOrDefault().FullName;
+                    }
+                    @if (name != null)
+                    {
+                        @name
+                    }
+                    else
+                    {
+                        @UserManager.GetUserName(User)
+                    }
+                </span>
+            </a>
+            <!-- Dropdown - User Information -->
+            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown" style="margin-top: 1rem">
+                <a class="dropdown-item" style="font-size: 1.6rem; padding: .5rem 1rem" asp-controller="Manage" asp-action="Index" asp-area="Identity">
+                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                    Hồ sơ
+                </a>
+
+                <div class="dropdown-divider"></div>
+                <form class="dropdown-item" asp-area="Identity" asp-controller="Account" asp-action="Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                    <button type="submit" style="font-size: 1.6rem; padding: 0px " class="nav-link btn btn-link text-dark">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Đăng xuất
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="register">
+        <a class="nav-link text-dark" id="register" asp-area="Identity" asp-controller="Account" asp-action="Register">Đăng ký</a>
+    </div>
+    <span style="margin: -.5rem .3rem 0rem .3rem">|</span>
+    <div class="login">
+        <a class="nav-link text-dark" id="login" asp-area="Identity" asp-controller="Account" asp-action="Login"> Đăng nhập</a>
+    </div>
+}
+
+
+
+@*@using Microsoft.AspNetCore.Identity
+@using WatchStore.Web.Areas.Identity.Data;
+@using WatchStore.Web.Models
+
+@inject SignInManager<AppUser> SignInManager
+@inject UserManager<AppUser> UserManager
+
+@if (SignInManager.IsSignedIn(User))
+{
+    <form asp-area="Identity" asp-controller="Account" asp-action="LogOff" method="post" id="logoutForm" class="navbar-right">
+        <ul class="nav navbar-nav navbar-right">
+            <li class="nav-item">
+                <a class="nav-link text-light" asp-area="Identity" asp-controller="Manage" asp-action="Index" title="Manage">
+                    <i class="far fa-user"></i>
+                    @UserManager.GetUserName(User)!
+                </a>
+            </li>
+            <li class="nav-item">
+                <button title="Đăng xuất" type="submit" class="btn btn-link navbar-btn navbar-link text-light">
+                    <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </li>
+        </ul>
+    </form>
+}
+else
+{
+    <ul class="nav navbar-nav navbar-right">
+
+        <li class="nav-item">
+            <a title="Đăng nhập" class="nav-link text-light" asp-area="Admin" asp-controller="Account" asp-action="Login">
+                <i class="fas fa-sign-in-alt"></i>
+            </a>
+        </li>
+    </ul>
+}*@

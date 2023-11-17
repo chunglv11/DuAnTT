@@ -1,0 +1,31 @@
+﻿@model ICollection<BanDochoi.Web.Models.Product>
+
+<div class="list-new-arrival swiper mySwiper">
+    <div class="swiper-wrapper">
+        @foreach (var item in Model)
+        {
+            var srcImg = "/contents/noimg.jpg";
+            if (item.ProductImages.Any())
+            {
+                srcImg = $"/contents/Products/{item.ProductImages.FirstOrDefault().FileName}";
+            }
+            <div class="new-arrival-item swiper-slide">
+                <a href="">
+                    <div class="new-arrival-img">
+                        <img src="@srcImg" alt="">
+                    </div>
+                    <div class="new-arrival-info">
+                        <h1 class="new-arrival-brand">@item.Category.Name</h1>
+                        <h1 class="new-arrival-name">@item.ProductName</h1>
+                        <p class="new-arrival-price">@item.Price.ToString("N0")<sup>đ</sup></p>
+                        <div class="details-product animate__animated animate__fadeInUp">
+                            <a asp-controller="ViewProduct" asp-action="Index" asp-route-id="@item.Id">CHI TIẾT</a>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+</div>

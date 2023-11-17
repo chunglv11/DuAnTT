@@ -1,0 +1,14 @@
+﻿@using Microsoft.AspNetCore.Http
+@using Newtonsoft.Json
+@using BanDochoi.Web.Services;
+
+@inject CartService _cartService;
+
+
+@{
+    var cart = _cartService.GetCartItems();
+    <i class="fa-solid fa-cart-arrow-down"></i>
+    <div class="quantity">
+        <span>@cart.Count</span>
+    </div>
+}
