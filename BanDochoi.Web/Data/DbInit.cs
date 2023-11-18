@@ -4,6 +4,7 @@ using System.Net.NetworkInformation;
 using System.Security.Cryptography;
 using System.Security.Policy;
 using System;
+using Microsoft.AspNetCore.Identity;
 using BanDochoi.Web.Models;
 using System.Runtime.InteropServices;
 using Org.BouncyCastle.Utilities;
@@ -12,6 +13,7 @@ using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Microsoft.Extensions.Hosting;
 using System.Reflection.Metadata;
+using BanDochoi.Web.Areas.Identity.Data;
 
 namespace BanDochoi.Web.Data
 {
@@ -19,7 +21,27 @@ namespace BanDochoi.Web.Data
     {
         public static void Seed(this ModelBuilder modelBuilder)
         {
-
+            // Tạo và thêm role vào database
+            var roleManager = modelBuilder.Entity<IdentityRole>().HasData(
+                new IdentityRole { Id = "cd866dd5-a4af-406b-a945-239f978608fc", Name = "Admin", NormalizedName = "ADMIN" }
+            );
+            var hasher = new PasswordHasher<AppUser>();
+            var userManager = modelBuilder.Entity<AppUser>().HasData(
+            new AppUser
+            {
+                Id = "abe3ffa0-434e-4038-9181-f0baaa623fd6",
+                UserName = "admin",
+                NormalizedUserName = "ADMIN",
+                Email = "admin@gmail.com",
+                PasswordHash = hasher.HashPassword(null, "@Admin123"),
+                NormalizedEmail = "ADMIN@GMAIL.COM",
+                EmailConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString()
+            }
+            );
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(
+            new IdentityUserRole<string> { RoleId = "cd866dd5-a4af-406b-a945-239f978608fc", UserId = "abe3ffa0-434e-4038-9181-f0baaa623fd6" } // Gán role "Admin" cho user 
+        );
             string d = "<div>" +
                         "<h3>Thông tin sản phẩm</h3>" +
                         "<ul>" +
@@ -497,11 +519,19 @@ namespace BanDochoi.Web.Data
                 new ProductImage() {Id=39,FileName = "vit-con-abc-2.jpg", ProductId= 13},
 
             };
+            Post ps = new Post();
+            ps.Id = 1;
+            ps.Title = "Chào mừng quý khách hàng đã đến với Tiemdochoi.vn!";
+            ps.ShortDescription = "Mô tả test";
+            ps.Content = "Tiệm đồ chơi được biết đến là cửa hàng bán đồ chơi an toàn cho trẻ em đồng thời bán với giá cả hợp lý, là cửa hàng chuyên bán sỉ, bán lẻ các sản phẩm đồ chơi cao cấp cho các bé từ 1 đến 7 tuổi.\r\n\r\n  \r\n\r\n \r\n\r\nChúng tôi làm việc với phương châm vì con yêu của bạn nên mỗi sản phẩm sẽ luôn đảm bảo:\r\n- Những đồ chơi tại cửa hàng Chibica Shop đang bán đều được nhập từ các nhà sản xuất có uy tín, nguyên liệu, chất liệu tạo ra những món đồ chơi, đồ dùng rất an toàn cho làn da của bé, không gây hại hay làm tổn hại đến hệ hô hấp của con mà nó còn giúp cho trẻ phát triển kỹ năng tư duy và óc sáng tạo.\r\n- Những sản phẩm của chúng tôi được lựa chọn tính toán kỹ lưỡng để bé có được nhiều món đồ chơi tốt mà bố mẹ cũng không quá đau ví tiền của mình.\r\n- Cửa hàng chúng tôi cũng cung cấp rất đa dạng về chủng loại và mẫu mã từ đồ chơi bằng gỗ, đồ chơi bằng nhựa an toàn, các món đồ chơi kích thích trí tuệ và mang tính giáo dục cho bé như: bộ đồ chơi rút gỗ, bộ bàn tính đa năng, bộ giáo cụ hình học, bộ thẻ học thông minh 16 chủ đề… hay các món đồ tăng cường tự lập cho bé như: bộ đồ chơi nấu ăn kitchen, bộ đồ chơi nhà bếp 31 chi tiết... và rất nhiều bộ sản phẩm khác có tính công nghệ và nghề nghiệp giúp trẻ phát triển năng động ngay từ nhỏ.\r\n\r\n \r\n\r\n\r\n \r\n\r\n \r\n\r\n Hình ảnh bộ đồ chơi được làm từ chất liệu an toàn cho bé\r\n\r\n\r\n\r\nVới đội ngũ nhân viên làm việc chuyên nghiệp và nhiệt tình quý phụ huynh sẽ hài lòng và yên tâm hơn khi lựa chọn các sản phẩm đồ chơi, đồ dùng trẻ em tại hệ thống cửa hầng Chibica Shop. Cùng với kinh nghiệm làm việc trên 6 năm bán hàng, cửa hàng Chibica Shop đang là lựa chọn thông minh cho các bâc phụ huynh có con em nhỏ. Bởi, trên thị trường đang có rất nhiều sản phẩm đồ chơi được bày bán và chúng tôi khuyên các bậc phụ huynh nên lựa chọn những sản phẩm uy tín và chất lượng tốt nhất theo sở thích và tính cách của trẻ nhỏ, để trẻ có thể phát triển toàn diện trí tuệ và óc sáng tạo của mình.";
+            ps.CreatedDate = DateTime.Now;
+            ps.CreatedBy = "Admin";
             modelBuilder.Entity<City>().HasData(citys);
             modelBuilder.Entity<District>().HasData(districts);
             modelBuilder.Entity<Category>().HasData(categories);
             modelBuilder.Entity<Product>().HasData(products);
             modelBuilder.Entity<ProductImage>().HasData(productImages);
+            modelBuilder.Entity<Post>().HasData(ps);
         }
     }
 }

@@ -15,6 +15,7 @@ using ContactModel = BanDochoi.Web.Models.Contact;
 namespace BanDochoi.Web.Areas.Contact.Controllers
 {
     [Area("Contact")]
+    [Authorize(Roles = "Admin")]
     public class ContactsController : Controller
     {
         private readonly BanDoChoiDbContext _context;

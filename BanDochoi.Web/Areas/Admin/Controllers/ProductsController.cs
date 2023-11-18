@@ -12,10 +12,12 @@ using BanDochoi.Web.Areas.Identity.Data;
 using BanDochoi.Web.Data;
 using BanDochoi.Web.Infrastructures;
 using BanDochoi.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BanDochoi.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("/Admin/Products/[action]")]
     public class ProductsController : Controller
     {

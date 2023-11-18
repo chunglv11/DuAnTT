@@ -7,10 +7,12 @@ using BanDochoi.Web.Areas.Admin.Models.Order;
 using BanDochoi.Web.Infrastructures;
 using BanDochoi.Web.Models;
 using BanDochoi.Web.Models.Enums;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BanDochoi.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("/Admin/Order/[action]")]
     public class OrderController : Controller
     {

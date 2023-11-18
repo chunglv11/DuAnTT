@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace BanDochoi.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("Admin/User/[action]")]
     //[Authorize(Roles = "Admin")]
     public class UserController : Controller

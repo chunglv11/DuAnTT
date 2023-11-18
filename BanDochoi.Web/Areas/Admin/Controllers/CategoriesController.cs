@@ -11,10 +11,12 @@ using BanDochoi.Web.Data;
 using BanDochoi.Web.Infrastructures;
 using BanDochoi.Web.Models;
 using BanDochoi.Web.Repositories.Repository;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BanDochoi.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("/Admin/Categories/[action]")]
     public class CategoriesController : Controller
     {

@@ -19,6 +19,18 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         }
         public IActionResult Index()
         {
+            int order = _unitOfWork.BanDoChoiDbContext.Orders.Count();
+            int user = _unitOfWork.BanDoChoiDbContext.Users.Count();
+            ViewBag.OrderCount = order;
+            ViewBag.UserCount = user;
+            int quantity = _unitOfWork.BanDoChoiDbContext.Products.Sum(x => x.Quantity);
+
+            var temp = _unitOfWork.BanDoChoiDbContext.Orders.Where(p => p.OrderDate.Month == DateTime.Now.Month && p.Status == BanDochoi.Web.Models.Enums.Status.Success).Sum(s => s.Total);
+            ViewBag.DoanhThu = temp.ToString("#,##0") + " VND";
+            return View();
+        }
+        public IActionResult ThongKe()
+        {
             string[] dateX = new string[12];
             string[] data = new string[12];
             for (int i = 0; i < 12; i++)

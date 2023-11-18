@@ -15,6 +15,7 @@ using BanDochoi.Web.Extension;
 namespace BanDochoi.Web.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = "Admin")]
     [Route("Admin/Role/[action]")]
     public class RoleController : Controller
     {
