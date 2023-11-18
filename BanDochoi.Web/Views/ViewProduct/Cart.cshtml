@@ -2,7 +2,10 @@
 @{
     Layout = "_Layout";
 }
+
+
 <div class="container">
+    <h4 id="error-message" style="color:red;"></h4>
     <h2 style="font-size: 3.6rem; margin-top: 20rem;">#GIỎ HÀNG</h2>
     <style>
         .checkout {
@@ -70,11 +73,12 @@
         </div>
         @section Scripts {
         <script>
-            $(document).ready(function () {
-                $(".updatecartitem1").click(function (event) {
+           $(document).ready(function () {
+                $(".updatecartitem1, .updatecartitem").click(function (event) {
                     event.preventDefault();
                     var productid = $(this).attr("data-productid");
                     var quantity = $(".quantity1-" + productid).val();
+
                     $.ajax({
                         type: "POST",
                         url: "@Url.RouteUrl("updatecart")",
@@ -83,27 +87,27 @@
                             quantity: quantity
                         },
                         success: function (result) {
-                            window.location.href = "@Url.RouteUrl("cart")";
-                        }
-                    });
-                });
-                $(".updatecartitem").click(function (event) {
-                    event.preventDefault();
-                    var productid = $(this).attr("data-productid");
-                    var quantity = $(".quantity-" + productid).val();
-                    $.ajax({
-                        type: "POST",
-                        url: "@Url.RouteUrl("updatecart")",
-                        data: {
-                            productid: productid,
-                            quantity: quantity
+                            // Kiểm tra kết quả
+                            if (result.success) {
+                                window.location.href = "@Url.RouteUrl("cart")";
+                            } else {
+                                // Nếu có lỗi, hiển thị thông báo với SweetAlert
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Oops...',
+                                    text: result.message
+                                });
+                            }
                         },
-                        success: function (result) {
-                            window.location.href = "@Url.RouteUrl("cart")";
+                        error: function (xhr, status, error) {
+                            // Xử lý lỗi nếu cần
+                            console.error(xhr.responseText);
                         }
                     });
                 });
             });
+
+
         </script>
     }
 

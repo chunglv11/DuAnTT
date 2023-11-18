@@ -95,19 +95,43 @@ namespace BanDochoi.Web.Controllers
         /// Cập nhật
         [Route("/updatecart", Name = "updatecart")]
         [HttpPost]
+        [HttpPost]
         public IActionResult UpdateCart([FromForm] int productid, [FromForm] int quantity)
         {
-            // Cập nhật Cart thay đổi số lượng quantity ...
             var cart = _cartService.GetCartItems();
             var cartitem = cart.Find(p => p.Product.Id == productid);
+
             if (cartitem != null)
             {
-                // Đã tồn tại, tăng thêm 1
-                cartitem.Quantity = quantity;
+                if (quantity <= 0)
+                {
+                    // Kiểm tra nếu số lượng là không hợp lệ
+                    return Json(new { success = false, message = "Số lượng không hợp lệ." });
+                }
+
+                if (quantity > cartitem.Product.Quantity)
+                {
+                    // Nếu số lượng cập nhật vượt quá số lượng tồn kho của sản phẩm
+                    cartitem.Quantity = cartitem.Product.Quantity;
+
+                    // Trả về JSON object với thông báo lỗi
+                    return Json(new { success = false, message = "Số lượng cập nhật vượt quá số lượng tồn kho của sản phẩm." });
+                }
+                else
+                {
+                    // Nếu mọi điều kiện đều hợp lệ, cập nhật số lượng
+                    cartitem.Quantity = quantity;
+                }
             }
+
             _cartService.SaveCartSession(cart);
-            return Ok();
+
+            // Trả về JSON object với kết quả thành công
+            return Json(new { success = true });
         }
+
+
+
 
         [Route("/checkout")]
         public IActionResult Checkout()
