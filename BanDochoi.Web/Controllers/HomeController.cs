@@ -16,7 +16,7 @@ namespace BanDochoi.Web.Controllers
 
         public IActionResult Index()
         {
-            var products = _unitOfWork.WatchStoreDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).OrderBy(o => o.CreatedDate).Take(12);
+            var products = _unitOfWork.BanDoChoiDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).OrderBy(o => o.CreatedDate).Take(12);
             return View(products);
         }
     }

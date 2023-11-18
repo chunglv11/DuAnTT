@@ -31,7 +31,7 @@ namespace BanDochoi.Web.Areas.Contact.Controllers
         {
             return _context.Contacts != null ?
                         View(await _context.Contacts.ToListAsync()) :
-                        Problem("Entity set 'WatchStoreDbContext.Contacts'  is null.");
+                        Problem("Entity set 'BanDoChoiDbContext.Contacts'  is null.");
         }
 
         // GET: Contact/Contacts/Details/5
@@ -161,7 +161,7 @@ namespace BanDochoi.Web.Areas.Contact.Controllers
         {
             if (_context.Contacts == null)
             {
-                return Problem("Entity set 'WatchStoreDbContext.Contacts'  is null.");
+                return Problem("Entity set 'BanDoChoiDbContext.Contacts'  is null.");
             }
             var contact = await _context.Contacts.FindAsync(id);
             if (contact != null)

@@ -9,7 +9,7 @@ namespace BanDochoi.Web.Infrastructures
         IProductRepository ProductRepository { get; }
         IPostRepository PostRepository { get; }
 
-        BanDoChoiDbContext WatchStoreDbContext { get; }
+        BanDoChoiDbContext BanDoChoiDbContext { get; }
 
         int SaveChange();
 

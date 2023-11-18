@@ -13,7 +13,7 @@ namespace BanDochoi.Web.Views.Shared.Components.CategoryBox
         }
         public IViewComponentResult Invoke()
         {
-            var list = _unitOfWork.WatchStoreDbContext.Categories.ToList();
+            var list = _unitOfWork.BanDoChoiDbContext.Categories.ToList();
             return View(list);
         }
     }

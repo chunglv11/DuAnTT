@@ -26,8 +26,8 @@ namespace BanDochoi.Web.Controllers
         }
         public IActionResult Index(int? id)
         {
-            var product = _unitOfWork.WatchStoreDbContext.Products.Where(p => p.Id == id).Include(p => p.ProductImages).Include(p => p.Category).Include(p => p.Reviews).FirstOrDefault();
-            ViewBag.relatedProduct = _unitOfWork.WatchStoreDbContext.Products.Where(p => p.CategoryId == product.CategoryId).Include(p => p.Category).Include(p => p.ProductImages).Take(4).ToList();
+            var product = _unitOfWork.BanDoChoiDbContext.Products.Where(p => p.Id == id).Include(p => p.ProductImages).Include(p => p.Category).Include(p => p.Reviews).FirstOrDefault();
+            ViewBag.relatedProduct = _unitOfWork.BanDoChoiDbContext.Products.Where(p => p.CategoryId == product.CategoryId).Include(p => p.Category).Include(p => p.ProductImages).Take(4).ToList();
             return View(product);
         }
 
@@ -36,7 +36,7 @@ namespace BanDochoi.Web.Controllers
         public IActionResult AddToCart([FromRoute] int productid)
         {
 
-            var product = _unitOfWork.WatchStoreDbContext.Products
+            var product = _unitOfWork.BanDoChoiDbContext.Products
                 .Where(p => p.Id == productid)
                 .FirstOrDefault();
             //int id = 2;
@@ -52,7 +52,7 @@ namespace BanDochoi.Web.Controllers
             }
             else
             {
-                var image = _unitOfWork.WatchStoreDbContext.ProductImages.Where(pi => pi.ProductId == productid).FirstOrDefault();
+                var image = _unitOfWork.BanDoChoiDbContext.ProductImages.Where(pi => pi.ProductId == productid).FirstOrDefault();
                 if (image == null)
                 {
                     cart.Add(new CartItem() { Quantity = 1, Product = product, Image = "/contents/noimg.jpg" });
@@ -112,8 +112,8 @@ namespace BanDochoi.Web.Controllers
         [Route("/checkout")]
         public IActionResult Checkout()
         {
-            var huyen = _unitOfWork.WatchStoreDbContext.Districts.AsQueryable().ToList();
-            var thanhpho = _unitOfWork.WatchStoreDbContext.Cities.AsQueryable().ToList();
+            var huyen = _unitOfWork.BanDoChoiDbContext.Districts.AsQueryable().ToList();
+            var thanhpho = _unitOfWork.BanDoChoiDbContext.Cities.AsQueryable().ToList();
             ViewBag.huyen = huyen;
             ViewBag.thanhpho = thanhpho;
             return View();
@@ -131,7 +131,7 @@ namespace BanDochoi.Web.Controllers
                 order.Total = total;
                 order.OrderDate = DateTime.Now;
                 order.Status = Status.Unprogressed;
-                _unitOfWork.WatchStoreDbContext.Orders.Add(order);
+                _unitOfWork.BanDoChoiDbContext.Orders.Add(order);
                 await _unitOfWork.SaveChangeAsync();
                 if (order.PaymentMethod == "COD")
                 {
@@ -145,12 +145,12 @@ namespace BanDochoi.Web.Controllers
                     }));
                     foreach (var orderDetail in orderDetails)
                     {
-                        _unitOfWork.WatchStoreDbContext.OrderDetails.Add(orderDetail);
+                        _unitOfWork.BanDoChoiDbContext.OrderDetails.Add(orderDetail);
                     }
                     await _unitOfWork.SaveChangeAsync();
                     cart.ForEach(x =>
                     {
-                        var sp = _unitOfWork.WatchStoreDbContext.Products.Where(p => p.Id == x.Product.Id).FirstOrDefault();
+                        var sp = _unitOfWork.BanDoChoiDbContext.Products.Where(p => p.Id == x.Product.Id).FirstOrDefault();
                         sp.Quantity = sp.Quantity - x.Quantity;
                     });
                     await _unitOfWork.SaveChangeAsync();
@@ -171,12 +171,12 @@ namespace BanDochoi.Web.Controllers
                     }));
                     foreach (var orderDetail in orderDetails)
                     {
-                        _unitOfWork.WatchStoreDbContext.OrderDetails.Add(orderDetail);
+                        _unitOfWork.BanDoChoiDbContext.OrderDetails.Add(orderDetail);
                     }
                     await _unitOfWork.SaveChangeAsync();
                     cart.ForEach(x =>
                     {
-                        var sp = _unitOfWork.WatchStoreDbContext.Products.Where(p => p.Id == x.Product.Id).FirstOrDefault();
+                        var sp = _unitOfWork.BanDoChoiDbContext.Products.Where(p => p.Id == x.Product.Id).FirstOrDefault();
                         sp.Quantity = sp.Quantity - x.Quantity;
                     });
                     await _unitOfWork.SaveChangeAsync();
@@ -203,7 +203,7 @@ namespace BanDochoi.Web.Controllers
         public IActionResult loadHuyen(int tinhid)
         {
             return Json(
-                _unitOfWork.WatchStoreDbContext.Districts.Where(h => h.CityId == tinhid).Select(h => new
+                _unitOfWork.BanDoChoiDbContext.Districts.Where(h => h.CityId == tinhid).Select(h => new
                 {
                     id = h.Id,
                     name = h.Name
@@ -214,9 +214,9 @@ namespace BanDochoi.Web.Controllers
         public IActionResult GetProductByCategory(int? page, int categoryId, string sort)
         {
             page = page < 1 ? 1 : page;
-            ViewBag.category = _unitOfWork.WatchStoreDbContext.Categories.Where(c => c.Id == categoryId).FirstOrDefault();
-            var list = _unitOfWork.WatchStoreDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).AsQueryable();
-            var cateParent = _unitOfWork.WatchStoreDbContext.Categories.Where(c => c.Id == categoryId && c.ParentCategoryId == null).FirstOrDefault();
+            ViewBag.category = _unitOfWork.BanDoChoiDbContext.Categories.Where(c => c.Id == categoryId).FirstOrDefault();
+            var list = _unitOfWork.BanDoChoiDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).AsQueryable();
+            var cateParent = _unitOfWork.BanDoChoiDbContext.Categories.Where(c => c.Id == categoryId && c.ParentCategoryId == null).FirstOrDefault();
             if (cateParent == null)
             {
                 list = list.Where(p => p.CategoryId == categoryId);
@@ -241,7 +241,7 @@ namespace BanDochoi.Web.Controllers
             }
             else
             {
-                var cateChildren = _unitOfWork.WatchStoreDbContext.Categories.Where(c => c.ParentCategoryId == categoryId).AsQueryable();
+                var cateChildren = _unitOfWork.BanDoChoiDbContext.Categories.Where(c => c.ParentCategoryId == categoryId).AsQueryable();
                 var result = (from p in list
                               join c in cateChildren on p.CategoryId equals c.Id
                               select p).AsQueryable();
@@ -270,8 +270,8 @@ namespace BanDochoi.Web.Controllers
         public IActionResult Search(int? page, string textSearch, string sort)
         {
             page = page < 1 ? 1 : page;
-            //ViewBag.category = _unitOfWork.WatchStoreDbContext.Categories.Where(c => c.Name.Contains(textSearch)).FirstOrDefault();
-            var list = _unitOfWork.WatchStoreDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).AsQueryable();
+            //ViewBag.category = _unitOfWork.BanDoChoiDbContext.Categories.Where(c => c.Name.Contains(textSearch)).FirstOrDefault();
+            var list = _unitOfWork.BanDoChoiDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).AsQueryable();
             list = list.Where(p => p.ProductName.Contains(textSearch));
             if (sort == "asc")
             {
@@ -296,7 +296,7 @@ namespace BanDochoi.Web.Controllers
 
         public JsonResult ListName(string q)
         {
-            var list = _unitOfWork.WatchStoreDbContext.Products.Where(p => p.ProductName.Contains(q)).Select(p => p.ProductName).ToList();
+            var list = _unitOfWork.BanDoChoiDbContext.Products.Where(p => p.ProductName.Contains(q)).Select(p => p.ProductName).ToList();
             return Json(
                 new
                 {
@@ -308,7 +308,7 @@ namespace BanDochoi.Web.Controllers
         public IActionResult SortProductsAsc(int categoryId)
         {
             return Json(
-                _unitOfWork.WatchStoreDbContext.Products.Where(p => p.CategoryId == categoryId).Include(p => p.ProductImages).OrderBy(p => p.Price).Select(p => new
+                _unitOfWork.BanDoChoiDbContext.Products.Where(p => p.CategoryId == categoryId).Include(p => p.ProductImages).OrderBy(p => p.Price).Select(p => new
                 {
                     id = p.Id,
                     name = p.ProductName,
@@ -323,7 +323,7 @@ namespace BanDochoi.Web.Controllers
         public IActionResult SortProductsDesc(int categoryId)
         {
             return Json(
-                _unitOfWork.WatchStoreDbContext.Products.Where(p => p.CategoryId == categoryId).Include(p => p.ProductImages).OrderByDescending(p => p.Price).Select(p => new
+                _unitOfWork.BanDoChoiDbContext.Products.Where(p => p.CategoryId == categoryId).Include(p => p.ProductImages).OrderByDescending(p => p.Price).Select(p => new
                 {
                     id = p.Id,
                     name = p.ProductName,
@@ -337,7 +337,7 @@ namespace BanDochoi.Web.Controllers
         public IActionResult ViewAllProduct(int? page, string sort)
         {
             page = page < 1 ? 1 : page;
-            var list = _unitOfWork.WatchStoreDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).AsQueryable();
+            var list = _unitOfWork.BanDoChoiDbContext.Products.Include(p => p.ProductImages).Include(p => p.Category).AsQueryable();
             list = list.OrderBy(p => p.CreatedDate);
             if (sort == "asc")
             {
@@ -366,7 +366,7 @@ namespace BanDochoi.Web.Controllers
         [HttpPost]
         public IActionResult ListComment(int id, int sotrang = 1)
         {
-            var product = _unitOfWork.WatchStoreDbContext.Products.Where(e => e.Id == id)
+            var product = _unitOfWork.BanDoChoiDbContext.Products.Where(e => e.Id == id)
                             .Include(p => p.Reviews)
                             .FirstOrDefault();
 
@@ -404,8 +404,8 @@ namespace BanDochoi.Web.Controllers
         public ActionResult SendComment([Bind("Id, Vote, Comment, FullName, PhoneNumber, ProductId")] Review emp)
         {
             emp.CreatedDate = DateTime.Now;
-            _unitOfWork.WatchStoreDbContext.Reviews.Add(emp);
-            _unitOfWork.WatchStoreDbContext.SaveChanges();
+            _unitOfWork.BanDoChoiDbContext.Reviews.Add(emp);
+            _unitOfWork.BanDoChoiDbContext.SaveChanges();
             return Json(new
             {
                 result = true
@@ -414,7 +414,7 @@ namespace BanDochoi.Web.Controllers
     }
 }
 
-//_unitOfWork.WatchStoreDbContext.Products.Where(p => p.CategoryId == categoryId).Join(_unitOfWork.WatchStoreDbContext.ProductImages, product => product.Id, image => image.ProductId, (product, image) => new
+//_unitOfWork.BanDoChoiDbContext.Products.Where(p => p.CategoryId == categoryId).Join(_unitOfWork.BanDoChoiDbContext.ProductImages, product => product.Id, image => image.ProductId, (product, image) => new
 //{
 //    id = product.Id,
 //    name = product.ProductName,

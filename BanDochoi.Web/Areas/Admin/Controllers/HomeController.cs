@@ -26,7 +26,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
 
                 dateX[i] = $"Tháng {i + 1}";
                 //var temp = db.Orders.Where(a => a.Orderdate.Value.Month == dateTimeNow.Month).Sum(s => s.Totalprice);
-                var temp = _unitOfWork.WatchStoreDbContext.Orders.Where(p => p.OrderDate.Month == i + 1 && p.Status == BanDochoi.Web.Models.Enums.Status.Success).Sum(s => s.Total);
+                var temp = _unitOfWork.BanDoChoiDbContext.Orders.Where(p => p.OrderDate.Month == i + 1 && p.Status == BanDochoi.Web.Models.Enums.Status.Success).Sum(s => s.Total);
                 if (temp == null)
                 {
                     temp = 0;

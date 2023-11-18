@@ -18,7 +18,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
     [Route("/Admin/Categories/[action]")]
     public class CategoriesController : Controller
     {
-        //private readonly WatchStoreDbContext _context;
+        //private readonly BanDoChoiDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<AppUser> _userManager;
 
@@ -28,7 +28,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
             _userManager = userManager;
         }
 
-        //public CategoriesController(WatchStoreDbContext context)
+        //public CategoriesController(BanDoChoiDbContext context)
         //{
         //    _context = context;
         //}
@@ -39,7 +39,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         {
             //return _context.Categories != null ? 
             //            View(await _context.Categories.ToListAsync()) :
-            //            Problem("Entity set 'WatchStoreDbContext.Categories'  is null.");
+            //            Problem("Entity set 'BanDoChoiDbContext.Categories'  is null.");
             var list = _unitOfWork.CategoryRepository.GetAll();
             return View(list);
         }
@@ -162,17 +162,17 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         {
             //if (_context.Categories == null)
             //{
-            //    return Problem("Entity set 'WatchStoreDbContext.Categories'  is null.");
+            //    return Problem("Entity set 'BanDoChoiDbContext.Categories'  is null.");
             //}
             var category = _unitOfWork.CategoryRepository.Get(id);
             if (category != null)
             {
-                var list1 = _unitOfWork.WatchStoreDbContext.Products.Where(c => c.CategoryId == id).ToList();
+                var list1 = _unitOfWork.BanDoChoiDbContext.Products.Where(c => c.CategoryId == id).ToList();
                 foreach (var p in list1)
                 {
                     p.CategoryId = null;
                 }
-                var list = _unitOfWork.WatchStoreDbContext.Categories.Where(c => c.ParentCategoryId == id).ToList();
+                var list = _unitOfWork.BanDoChoiDbContext.Categories.Where(c => c.ParentCategoryId == id).ToList();
                 foreach (var c in list)
                 {
                     c.ParentCategoryId = null;

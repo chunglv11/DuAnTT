@@ -18,7 +18,7 @@ namespace BanDochoi.Web.Controllers
             //if (ModelState.IsValid)
             //{
             review.CreatedDate = DateTime.Now;
-            _unitOfWork.WatchStoreDbContext.Reviews.Add(review);
+            _unitOfWork.BanDoChoiDbContext.Reviews.Add(review);
             await _unitOfWork.SaveChangeAsync();
             return Ok();
         }

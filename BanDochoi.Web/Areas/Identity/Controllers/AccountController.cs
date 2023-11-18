@@ -74,9 +74,9 @@ namespace BanDochoi.Web.Areas.Identity.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(1, "User logged in.");
-                var link = (from u in _unitOfWork.WatchStoreDbContext.Users
-                            join ur in _unitOfWork.WatchStoreDbContext.UserRoles on u.Id equals ur.UserId
-                            join r in _unitOfWork.WatchStoreDbContext.Roles on ur.RoleId equals r.Id
+                var link = (from u in _unitOfWork.BanDoChoiDbContext.Users
+                            join ur in _unitOfWork.BanDoChoiDbContext.UserRoles on u.Id equals ur.UserId
+                            join r in _unitOfWork.BanDoChoiDbContext.Roles on ur.RoleId equals r.Id
                             where (u.UserName == model.UserNameOrEmail || u.Email == model.UserNameOrEmail) && r.Name == "Admin"
                             select u).ToList();
                 if (link.Count > 0)

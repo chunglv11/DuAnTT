@@ -19,15 +19,15 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
     [Route("/Admin/Products/[action]")]
     public class ProductsController : Controller
     {
-        //private readonly WatchStoreDbContext _context;
+        //private readonly BanDoChoiDbContext _context;
         private readonly IUnitOfWork _unitOfWork;
         private readonly UserManager<AppUser> _userManager;
 
-        //public ProductsController(WatchStoreDbContext context)
+        //public ProductsController(BanDoChoiDbContext context)
         //{
         //    _context = context;
         //}
-        public ProductsController(/*WatchStoreDbContext context,*/ IUnitOfWork unitOfWork, UserManager<AppUser> userManager)
+        public ProductsController(/*BanDoChoiDbContext context,*/ IUnitOfWork unitOfWork, UserManager<AppUser> userManager)
         {
             //_context = context;
             _unitOfWork = unitOfWork;
@@ -38,9 +38,9 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Index()
         {
-            //var watchStoreDbContext = _context.Products.Include(p => p.Category);
-            //return View(await watchStoreDbContext.ToListAsync());
-            var list = _unitOfWork.WatchStoreDbContext.Products.Include(p => p.Category);
+            //var BanDoChoiDbContext = _context.Products.Include(p => p.Category);
+            //return View(await BanDoChoiDbContext.ToListAsync());
+            var list = _unitOfWork.BanDoChoiDbContext.Products.Include(p => p.Category);
             return View(list);
         }
 
@@ -180,16 +180,16 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         {
             if (_unitOfWork.ProductRepository.GetAll() == null)
             {
-                return Problem("Entity set 'WatchStoreDbContext.Products'  is null.");
+                return Problem("Entity set 'BanDoChoiDbContext.Products'  is null.");
             }
             var product = _unitOfWork.ProductRepository.Get(id);
             if (product != null)
             {
                 _unitOfWork.ProductRepository.Delete(product);
-                var listImage = _unitOfWork.WatchStoreDbContext.ProductImages.Where(pi => pi.ProductId == id).ToList();
+                var listImage = _unitOfWork.BanDoChoiDbContext.ProductImages.Where(pi => pi.ProductId == id).ToList();
                 foreach (var image in listImage)
                 {
-                    _unitOfWork.WatchStoreDbContext.ProductImages.Remove(image);
+                    _unitOfWork.BanDoChoiDbContext.ProductImages.Remove(image);
                     var filename = "Uploads/Products/" + image.FileName;
                     System.IO.File.Delete(filename);
                 }
@@ -221,7 +221,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult UploadPhoto(int id)
         {
-            var product = _unitOfWork.WatchStoreDbContext.Products.Where(e => e.Id == id)
+            var product = _unitOfWork.BanDoChoiDbContext.Products.Where(e => e.Id == id)
                             .Include(p => p.ProductImages)
                             .FirstOrDefault();
             if (product == null)
@@ -235,7 +235,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         [HttpPost, ActionName("UploadPhoto")]
         public async Task<IActionResult> UploadPhotoAsync(int id, [Bind("FileUpload")] UploadOneFile f)
         {
-            var product = _unitOfWork.WatchStoreDbContext.Products.Where(e => e.Id == id)
+            var product = _unitOfWork.BanDoChoiDbContext.Products.Where(e => e.Id == id)
                             .Include(p => p.ProductImages)
                             .FirstOrDefault();
 
@@ -257,13 +257,13 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
                     await f.FileUpload.CopyToAsync(filestream);
                 }
 
-                _unitOfWork.WatchStoreDbContext.ProductImages.Add(new ProductImage()
+                _unitOfWork.BanDoChoiDbContext.ProductImages.Add(new ProductImage()
                 {
                     ProductId = product.Id,
                     FileName = file1
                 });
 
-                await _unitOfWork.WatchStoreDbContext.SaveChangesAsync();
+                await _unitOfWork.BanDoChoiDbContext.SaveChangesAsync();
             }
 
 
@@ -273,7 +273,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult ListPhotos(int id)
         {
-            var product = _unitOfWork.WatchStoreDbContext.Products.Where(e => e.Id == id)
+            var product = _unitOfWork.BanDoChoiDbContext.Products.Where(e => e.Id == id)
                             .Include(p => p.ProductImages)
                             .FirstOrDefault();
 
@@ -306,11 +306,11 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult DeletePhoto(int id)
         {
-            var photo = _unitOfWork.WatchStoreDbContext.ProductImages.Where(e => e.Id == id).FirstOrDefault();
+            var photo = _unitOfWork.BanDoChoiDbContext.ProductImages.Where(e => e.Id == id).FirstOrDefault();
             if (photo != null)
             {
-                _unitOfWork.WatchStoreDbContext.ProductImages.Remove(photo);
-                _unitOfWork.WatchStoreDbContext.SaveChanges();
+                _unitOfWork.BanDoChoiDbContext.ProductImages.Remove(photo);
+                _unitOfWork.BanDoChoiDbContext.SaveChanges();
 
                 var filename = "Uploads/Products/" + photo.FileName;
                 System.IO.File.Delete(filename);
@@ -321,7 +321,7 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
         [HttpPost]
         public async Task<IActionResult> UploadPhotoApi(int id, [Bind("FileUpload")] UploadOneFile f)
         {
-            var product = _unitOfWork.WatchStoreDbContext.Products.Where(e => e.Id == id)
+            var product = _unitOfWork.BanDoChoiDbContext.Products.Where(e => e.Id == id)
                 .Include(p => p.ProductImages)
                 .FirstOrDefault();
 
@@ -343,13 +343,13 @@ namespace BanDochoi.Web.Areas.Admin.Controllers
                     await f.FileUpload.CopyToAsync(filestream);
                 }
 
-                _unitOfWork.WatchStoreDbContext.ProductImages.Add(new ProductImage()
+                _unitOfWork.BanDoChoiDbContext.ProductImages.Add(new ProductImage()
                 {
                     ProductId = product.Id,
                     FileName = file1
                 });
 
-                await _unitOfWork.WatchStoreDbContext.SaveChangesAsync();
+                await _unitOfWork.BanDoChoiDbContext.SaveChangesAsync();
             }
             return Ok();
         }

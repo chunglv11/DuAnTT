@@ -49,7 +49,7 @@ namespace BanDochoi.Web.Infrastructures
                 return this.postRepository;
             }
         }
-        public BanDoChoiDbContext WatchStoreDbContext => this.context;
+        public BanDoChoiDbContext BanDoChoiDbContext => this.context;
 
         public void Dispose()
         {
