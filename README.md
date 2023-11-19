@@ -14,9 +14,9 @@
   + Quản lý sản phẩm, quản lý hoá đơn, quản lý bài viết, quàn lý liên hệ, thống kê doanh thu
 ## Đóng góp
 - Lại Văn Chung:
-  + Đăng nhập, đăng ký, đặt hàng, thanh toán, chat bot, quản lý bài viết, quản lý hoá đơn, phân quyền
+  + Đăng nhập, đăng ký, đặt hàng, thanh toán, blog giới thiệu các sản phẩm, chat bot, quản lý bài viết, quản lý hoá đơn, phân quyền
 - Nguyễn Chung Tâm:
-  + Thông tin chi tiết sản phẩm, chương trình ưu đãi, blog giới thiệu các sản phẩm, liên hệ, đánh giá sản phẩm, quản lý sản phẩm, quản lý đơn hàng người dùng, quản lý liên hệ, thống kê doanh thu
+  + Thông tin chi tiết sản phẩm, chương trình ưu đãi, liên hệ, đánh giá sản phẩm, quản lý sản phẩm, quản lý đơn hàng người dùng, quản lý liên hệ, thống kê doanh thu
 - Hoàng Văn Lâm: Tester
  
 ## Công nghệ sử dụng
