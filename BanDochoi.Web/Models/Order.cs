@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.ComponentModel.DataAnnotations;
 using System.Xml.Linq;
 using BanDochoi.Web.Models.Enums;
+using BanDochoi.Web.Areas.Identity.Data;
 
 namespace BanDochoi.Web.Models
 {
@@ -37,6 +38,7 @@ namespace BanDochoi.Web.Models
         public string PaymentMethod { get; set; }
         public int DistrictId { get; set; }
         public virtual District? District { get; set; }
+        public virtual AppUser AppUser { get; set; }
         public ICollection<OrderDetail>? OrderDetails { get; set; }
     }
 }
