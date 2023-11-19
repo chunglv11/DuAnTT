@@ -5,6 +5,7 @@ using BanDochoi.Web.Areas.Identity.Data;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using BanDochoi.Web.Extension;
 using BanDochoi.Web.Areas.Identity.Models.Manage;
+using BanDochoi.Web.Infrastructures;
 
 namespace BanDochoi.Web.Areas.Identity.Controllers
 {
@@ -16,17 +17,19 @@ namespace BanDochoi.Web.Areas.Identity.Controllers
         private readonly SignInManager<AppUser> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ILogger<ManageController> _logger;
+        private readonly IUnitOfWork _unitOfWork;
 
         public ManageController(
         UserManager<AppUser> userManager,
         SignInManager<AppUser> signInManager,
         IEmailSender emailSender,
-        ILogger<ManageController> logger)
+        ILogger<ManageController> logger, IUnitOfWork unitOfWork)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         //
@@ -394,9 +397,23 @@ namespace BanDochoi.Web.Areas.Identity.Controllers
 
         }
         [HttpGet]
-        public IActionResult GetAllBill()
+        public async Task<IActionResult> GetAllBill()
         {
-            return View();
+            var user = await GetCurrentUserAsync();
+            var hoaDons = _unitOfWork.BanDoChoiDbContext.Orders.Where(x=>x.AppUserId==user.Id).ToList();
+            return View(hoaDons);
+        }
+        [HttpGet]
+        public async Task<IActionResult> GetBillDetail(string id)
+        {
+            var temp = Convert.ToInt32(id);
+            var lst = new List<BillDetailViewModel>();
+            var chiTietHoaDons = _unitOfWork.BanDoChoiDbContext.OrderDetails.Where(x => x.OrderId == temp).ToList();
+            foreach(var item in chiTietHoaDons)
+            {
+                lst.Add(new BillDetailViewModel() { Name = _unitOfWork.BanDoChoiDbContext.Products.FirstOrDefault(x => x.Id == item.ProductId).ProductName, Quantity = item.Quantity, Price = item.Price });
+            }
+            return View(lst);
         }
     }
 }

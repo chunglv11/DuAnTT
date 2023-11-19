@@ -8,21 +8,25 @@ using BanDochoi.Web.Models;
 using BanDochoi.Web.Models.Enums;
 using BanDochoi.Web.Services;
 using X.PagedList;
+using BanDochoi.Web.Areas.Identity.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace BanDochoi.Web.Controllers
 {
     public class ViewProductController : Controller
     {
+        private readonly UserManager<AppUser> _userManager;
         private readonly IUnitOfWork _unitOfWork;
         private readonly CartService _cartService;
         private readonly IEmailSender _emailSender;
         private readonly IVnPayService _vnPayService;
-        public ViewProductController(IUnitOfWork unitOfWork, CartService cartService, IEmailSender emailSender, IVnPayService vnPayService)
+        public ViewProductController(IUnitOfWork unitOfWork, CartService cartService, IEmailSender emailSender, IVnPayService vnPayService, UserManager<AppUser> userManager)
         {
             _unitOfWork = unitOfWork;
             _cartService = cartService;
             _emailSender = emailSender;
             _vnPayService = vnPayService;
+            _userManager = userManager;
         }
         public IActionResult Index(int? id)
         {
@@ -142,6 +146,10 @@ namespace BanDochoi.Web.Controllers
             ViewBag.thanhpho = thanhpho;
             return View();
         }
+        private Task<AppUser> GetCurrentUserAsync()
+        {
+            return _userManager.GetUserAsync(HttpContext.User);
+        }
         [HttpPost]
         [Route("/checkout")]
         [ValidateAntiForgeryToken]
@@ -155,6 +163,8 @@ namespace BanDochoi.Web.Controllers
                 order.Total = total;
                 order.OrderDate = DateTime.Now;
                 order.Status = Status.Unprogressed;
+                var user = await GetCurrentUserAsync();
+                order.AppUserId = user.Id;
                 _unitOfWork.BanDoChoiDbContext.Orders.Add(order);
                 await _unitOfWork.SaveChangeAsync();
                 if (order.PaymentMethod == "COD")

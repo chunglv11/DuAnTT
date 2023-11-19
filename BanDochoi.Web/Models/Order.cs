@@ -37,6 +37,7 @@ namespace BanDochoi.Web.Models
         public string PhoneNumber { get; set; }
         public string PaymentMethod { get; set; }
         public int DistrictId { get; set; }
+        public string AppUserId { get; set; }
         public virtual District? District { get; set; }
         public virtual AppUser AppUser { get; set; }
         public ICollection<OrderDetail>? OrderDetails { get; set; }
