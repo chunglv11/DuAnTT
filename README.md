@@ -1,4 +1,4 @@
-![ảnh](https://github.com/chunglv11/DuAnTT/assets/118252741/9be6ccf7-a1d9-4133-ad52-a4a371ae4ca4)# Dự án thực tập
+# Dự án thực tập
 # Đề tài: Xây dựng website bán đồ chơi trẻ em
 ## Thành viên
 - Lại Văn Chung(dev)
