@@ -15,7 +15,7 @@
 }
 <style>
     .bg-login-image {
-        background-image: url('https://thuthuatnhanh.com/wp-content/uploads/2021/06/Hinh-anh-dong-ho-dep.jpg');
+        background-image: url('https://dochoimamnon.org/wp-content/uploads/2017/05/%C4%91%E1%BB%93-ch%C6%A1i-n%E1%BA%A7m-non-gi%C3%A1-r%E1%BA%BB.jpg');
         background-position: center;
         background-repeat: no-repeat;
         background-size: contain;
@@ -47,6 +47,7 @@
                                 <div class="form-group">
                                     <input asp-for="Password" class="form-control form-control-user" />
                                     <span asp-validation-for="Password" class="text-danger"></span>
+                                    <span toggle="#passwordInput" class="fa fa-fw fa-eye field-icon toggle-password"></span>
                                 </div>
 
 
@@ -70,6 +71,7 @@
                                     }
                                     else
                                     {
+                                        //chưa làm được
                                         <form asp-controller="Account" asp-action="ExternalLogin" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" class="form-horizontal" role="form">
                                             <div>
                                                 <p>
@@ -127,3 +129,13 @@
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
 }
+<script>
+    document.querySelector('.toggle-password').addEventListener('click', function() {
+        const passwordInput = document.querySelector(this.getAttribute('toggle'));
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+        } else {
+            passwordInput.type = 'password';
+        }
+    });
+</script>

@@ -15,13 +15,11 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("DoChoiDbContextConnection") ?? throw new InvalidOperationException("Connection string 'DoChoiDbContextConnection' not found.");
 var services = builder.Services;
-//builder.Services.AddDbContext<WatchStoreDbContext>(options =>
-//    options.UseSqlServer(connectionString).EnableSensitiveDataLogging());
+
 builder.Services.AddDbContext<BanDoChoiDbContext>(options => options.UseSqlServer(
     builder.Configuration.GetConnectionString("DoChoiDbContextConnection")
     ));
-//builder.Services.AddDefaultIdentity<AppUser>(options => options.SignIn.RequireConfirmedAccount = true)
-//    .AddEntityFrameworkStores<WatchStoreDbContext>();
+
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IVnPayService, VnPayService>();

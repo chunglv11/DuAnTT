@@ -7,7 +7,7 @@
 
 
 <div class="container">
-    <h1>Danh sách hóa đơn</h1>
+    <h1>Danh sách các đơn hàng</h1>
     <table class="table col-lg-12">
         <thead>
             <tr>
@@ -64,7 +64,26 @@
                         @Html.DisplayFor(modelItem => item.Total)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Status)
+                        @if (item.Status == BanDochoi.Web.Models.Enums.Status.Unprogressed)
+                        {
+                            <p style="color:red">Chưa xử lý</p>
+                        }
+                        else if(item.Status == BanDochoi.Web.Models.Enums.Status.Confirmed)
+                        {
+                            <p style="color:red">Đã xác nhận</p>
+                        }
+                        else if(item.Status == BanDochoi.Web.Models.Enums.Status.Shipping)
+                        {
+                            <p style="color:red">Đang giao hàng</p>
+                        }
+                        else if(item.Status == BanDochoi.Web.Models.Enums.Status.Success)
+                        {
+                            <p style="color:red">Thành công</p>
+                        }
+                        else if(item.Status == BanDochoi.Web.Models.Enums.Status.Canceled)
+                        {
+                            <p style="color:red">Thất bại</p>
+                        }
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.OrderDate)
@@ -79,7 +98,7 @@
                         @Html.DisplayFor(modelItem => item.PaymentMethod)
                     </td>
                     <td>
-                        @Html.ActionLink("Details", "GetBillDetail", new {  id=item.Id })
+                        @Html.ActionLink("Chi tiết", "GetBillDetail", new {  id=item.Id })
                     </td>
                 </tr>
             }
