@@ -393,7 +393,10 @@ namespace BanDochoi.Web.Areas.Identity.Controllers
             return RedirectToAction(nameof(Index), "Manage");
 
         }
-
-
+        [HttpGet]
+        public IActionResult GetAllBill()
+        {
+            return View();
+        }
     }
 }

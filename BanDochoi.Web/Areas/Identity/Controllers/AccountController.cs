@@ -681,5 +681,6 @@ namespace BanDochoi.Web.Areas.Identity.Controllers
         {
             return View();
         }
+        
     }
 }
